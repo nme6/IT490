@@ -4,7 +4,7 @@
 		"startRQM": "sudo systemctl start rabbitmq-server",
 		"stopRQM": "sudo systemctl stop rabbitmq-server",
 		"statusRQM": "systemctl status rabbitmq-server",
-		"snsRQM": 
+		"snsRM": 
 			[
 			"sudo systemctl start rabbitmq-server",
 			"systemctl status rabbitmq-server"
