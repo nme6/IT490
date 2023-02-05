@@ -7,8 +7,7 @@
 		"snsRQM": 
 			[
 			"@startRMQ",
-			"@statusRMQ",
-			"php --version"
-      ]
+			"@statusRMQ"
+     			]
 		}
 }
