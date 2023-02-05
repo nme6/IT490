@@ -6,8 +6,8 @@
 		"statusRMQ": "systemctl status rabbitmq-server",
 		"snsRMQ": 
 			[
-			"sudo systemctl start rabbitmq-server",
-			"systemctl status rabbitmq-server"
+			"@startRMQ",
+			"@statusRMQ"
 		        ]
 		}
 }
