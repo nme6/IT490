@@ -3,7 +3,7 @@
 		{
 		"startRMQ": "sudo systemctl start rabbitmq-server",
 		"stopRMQ": "sudo systemctl stop rabbitmq-server",
-		"statusRMQ": "systemctl status rabbitmq-server",
+		"sttusRMQ": "systemctl status rabbitmq-server",
 		"snsRMQ": 
 			[
 			"@startRMQ",
