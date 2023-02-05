@@ -1,7 +1,0 @@
-{
-	"scripts":{
-	"mysqlstart": "sudo systemctl start mysql",
-	"mysqlenter": "sudo mysql -u root"
-	}
-}
-
