@@ -1,5 +1,10 @@
 {
 	"scripts": {
+		"installRequiredPrograms":[
+			"sudo apt update",
+			"sudo apt install net-tools",
+			"sudo apt install apache2"
+		],
 		"phpver": ["php --version"],
 		"apache2start": ["sudo service apache2 start"],
 		"apache2status": ["sudo service apache2 status"],
