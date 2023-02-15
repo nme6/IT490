@@ -7,13 +7,15 @@ use PhpAmqpLib\Message\AMQPMessage;
 $connection = new AMQPStreamConnection('192.168.191.22', 5672, 'admin', 'admin');
 $channel = $connection->channel();
 
-$channel->queue_declare('howdy', false, false, false, false);
+#$custom_message = "Hello World from Ellis!";
 
-$msg = new AMQPMessage('Hello World');
-$channel->basic_publish($msg, '', 'howdy');
+$channel->queue_declare('declare', false, false, false, false);
+
+$msg = new AMQPMessage("Hello World");
+$channel->basic_publish($msg, '', 'declare');
 
 
-echo " [x] Sent 'Hello World!'\n";
+echo " [x] Sent Hello World\n";
 
 $channel->close();
 $connection->close();
