@@ -9,5 +9,8 @@
 			"@startRMQ",
 			"@statusRMQ"
 			]
-		}
+		},
+	"require": {
+		"php-amqplib/php-amqplib": "^3.5"
+	}
 }
