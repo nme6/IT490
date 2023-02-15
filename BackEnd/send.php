@@ -9,13 +9,13 @@ $channel = $connection->channel();
 
 #$custom_message = "Hello World from Ellis!";
 
-$channel->queue_declare('declare', false, false, false, false);
+$channel->queue_declare('MILESTONE 2', false, false, false, false);
 
-$msg = new AMQPMessage("Hello World");
-$channel->basic_publish($msg, '', 'declare');
+$msg = new AMQPMessage("Hello World from Ellis [Backend]");
+$channel->basic_publish($msg, '', 'MILESTONE 2');
 
 
-echo " [x] Sent Hello World\n";
+echo " [x] Sent Hello World from Ellis!\n";
 
 $channel->close();
 $connection->close();
