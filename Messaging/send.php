@@ -12,7 +12,7 @@ $channel = $connection->channel();
 $channel->queue_declare('MILESTONE 2', false, false, false, false);
 
 $msg = new AMQPMessage("Hello World from Maximilian [Messaging]");
-$channel->basic_publish($msg, '', 'declare');
+$channel->basic_publish($msg, '', 'MILESTONE 2');
 
 
 echo " [x] Sent Hello World\n";
