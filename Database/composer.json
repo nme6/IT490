@@ -1,7 +1,12 @@
 {
 	"scripts":{
-	"mysqlstart": "sudo systemctl start mysql",
-	"mysqlenter": "sudo mysql -u root"
+		"mysqlinstall": "sudo apt-get update && sudo apt-get install -y mysql-server",
+  		"mysqlstart": "sudo systemctl start mysql",
+		"mysqlenter": "sudo mysql -u root -p",
+		"mysqltest_user": "mysql -u test -p",
+		"mysqlstatus": "sudo systemctl status mysql",
+		"mysqlstop": "sudo systemctl stop mysql",
+		"mysqlbackup": "mysqldump -u test -p test mybackup.sql"
 	}
 }
 
