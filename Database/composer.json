@@ -1,5 +1,10 @@
 {
 	"scripts":{
+		"sshRMQ":"ssh maximilian@192.168.191.22 'cd ~/Desktop/IT490/IT490/Messaging && ./remoteStart.sh'",
+                "sshBackEnd":"ssh ellis@192.168.191.178 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'",
+		"sshApache2": "ssh nevans@192.168.191.182 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",
+		"sshMYSQL": "ssh drajaram@192.168.191.48 'cd ~/IT490/IT490/Database && ./remoteStart.sh'",
+
 		"mysqlinstall": "sudo apt-get update && sudo apt-get install -y mysql-server",
   		"mysqlstart": "sudo systemctl start mysql",
 		"mysqlenter": "sudo mysql -u root -p",
