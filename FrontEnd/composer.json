@@ -12,7 +12,10 @@
 		"snsApache2":[
 			"@apache2start",
 			"@apache2status"
-		]
+		],
+		"sshRMQ":["ssh maximilian@192.168.191.22 'cd ~/Desktop/IT490/IT490/Messaging && ./remoteStart.sh'"],
+		"sshDatabase":["ssh drajaram@192.168.191.48 'cd ~/IT490/IT490/Database && ./remoteStart.sh'"],
+		"sshBackEnd":["ssh ellis@192.168.191.178 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh"]
 	},
 	"require": {
 		"php-amqplib/php-amqplib": "^3.5"
