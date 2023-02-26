@@ -18,7 +18,7 @@ $callback = function ($msg) {
 
 $channel->basic_consume('MILESTONE 2', '', false, true, false, false, $callback);
 
-while ($channel->is_open()) {
+while (count($channel->callbacks)) {
 
 	$channel->wait();
 }
