@@ -7,14 +7,15 @@
 		"statusRMQ": "cd ~/IT490/IT490/Messaging && ./remoteStart.sh",
 		
 		"t2": "#==========================[ Remote Code Scripts ]=================================#",
-		"checkFE": "ssh nevans@192.168.191.182 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",
-		"checkDB": "ssh drajaram@192.168.191.48 'cd ~/IT490/IT490/Database && ./remoteStart.sh'",
-		"checkBE": "ssh ellis@192.168.191.178 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh",
+		"checkFE": "ssh neil@192.168.191.215 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",
+		"checkDB": "ssh daniel@192.168.191.240 'cd ~/IT490/IT490/Database && ./remoteStart.sh'",
+		"checkBE": "ssh ellis@192.168.191.67 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'",
 		
 		"t3": "#======[ SSH Connections ]=======#",
-		"sshFE": "ssh nevans@192.168.191.182",
-                "sshDB": "ssh drajaram@192.168.191.48",
-                "sshBE": "ssh ellis@192.168.191.178"
+		"sshMS": "ssh maximilian@192.168.191.111",
+		"sshFE": "ssh neil@192.168.191.215",
+                "sshDB": "ssh daniel@192.168.191.240",
+                "sshBE": "ssh ellis@192.168.191.67"
 	},
 	"require": {
 		"php-amqplib/php-amqplib": "^2.0"
