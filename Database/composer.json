@@ -1,10 +1,18 @@
 {
 	"scripts":{
-		"sshRMQ":"ssh maximilian@192.168.191.22 'cd ~/Desktop/IT490/IT490/Messaging && ./remoteStart.sh'",
-                "sshBackEnd":"ssh ellis@192.168.191.178 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'",
-		"sshApache2": "ssh nevans@192.168.191.182 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",
-		"sshMYSQL": "ssh drajaram@192.168.191.48 'cd ~/IT490/IT490/Database && ./remoteStart.sh'",
-
+                "t1": "#==========================[ Remote Code Scripts ]==================================#",
+		"startMessaging":"ssh maximilian@192.168.191.111 'cd ~/Desktop/IT490/IT490/Messaging && ./remoteStart.sh'",
+                "startBackEnd":"ssh ellis@192.168.191.67 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'",
+		"startFrontEnd": "ssh neil@192.168.191.215 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",
+		"startDatabase": "ssh daniel@192.168.191.240 'cd ~/IT490/IT490/Database && ./remoteStart.sh'",
+		
+		"t2": "#==[ SSH Conntection ]==#",
+		"sshBE":"ssh ellis@192.168.191.67",
+		"sshFE":"ssh neil@192.168.191.215",
+		"sshMS":"ssh maximilian@192.168.191.111",
+		"sshDB":"ssh daniel@192.168.191.240",
+		
+                "t3": "#=========================[ Local Scripts ]=========================#",
 		"mysqlinstall": "sudo apt-get update && sudo apt-get install -y mysql-server",
   		"mysqlstart": "sudo systemctl start mysql",
 		"mysqlenter": "sudo mysql -u root -p",
