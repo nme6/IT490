@@ -1,10 +1,13 @@
 {
 	"scripts": {
+		"t1": ["==============================[ Installation Scripts ]=============================="],
 		"installRequiredPrograms":[
 			"sudo apt update",
 			"sudo apt install net-tools",
 			"sudo apt install apache2"
 		],
+
+		"t2": ["==============================[ Local Scripts ]=============================="],
 		"phpver": ["php --version"],
 		"apache2start": ["sudo service apache2 start"],
 		"apache2status": ["sudo service apache2 status"],
@@ -13,9 +16,18 @@
 			"@apache2start",
 			"@apache2status"
 		],
-		"sshRMQ":["ssh maximilian@192.168.191.22 'cd ~/Desktop/IT490/IT490/Messaging && ./remoteStart.sh'"],
-		"sshDatabase":["ssh drajaram@192.168.191.48 'cd ~/IT490/IT490/Database && ./remoteStart.sh'"],
-		"sshBackEnd":["ssh ellis@192.168.191.178 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'"]
+
+		"t3": ["#==============================[ Remote Code Scripts ]==============================#"],
+		"sshRMQ":["ssh maximilian@192.168.191.111 'cd ~/IT490/IT490/Messaging && ./remoteStart.sh'"],
+		"sshMySQL":["ssh daniel@192.168.191.240 'cd ~/IT490/IT490/Database && ./remoteStart.sh'"],
+		"sshBackEnd":["ssh ellis@192.168.191.67 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'"],
+		"sshFrontEnd": ["ssh neil@192.168.191.215 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'"],
+
+		"t4":["==============================[ SSH Scripts ]=============================="],
+		"sshMSG":["ssh maximilian@192.168.191.111"],
+		"sshDB":["ssh daniel@192.168.191.240"],
+		"sshBE":["ssh ellis@192.168.191.67"],
+		"sshFE":["ssh neil@192.168.191.215"]
 	},
 	"require": {
 		"php-amqplib/php-amqplib": "^3.5"
