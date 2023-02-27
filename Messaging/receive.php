@@ -1,9 +1,9 @@
-[O<?php
+<?php
 
 require_once __DIR__ . '/vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
-$connection = new AMQPStreamConnection('192.168.191.22', 5672, 'admin', 'admin');
+$connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
 $channel = $connection->channel();
 
 
@@ -18,11 +18,10 @@ $callback = function ($msg) {
 
 $channel->basic_consume('MILESTONE 2', '', false, true, false, false, $callback);
 
-while ($channel->is_open()) {
+while (count($channel->callbacks)) {
 
 	$channel->wait();
 }
 $channel->close();
 $connection->close();
 ?>
-

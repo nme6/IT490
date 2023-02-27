@@ -1,12 +1,11 @@
 <?php
-
 namespace PhpAmqpLib\Wire;
 
 use PhpAmqpLib\Exception\AMQPInvalidArgumentException;
 use PhpAmqpLib\Exception\AMQPOutOfRangeException;
-use PhpAmqpLib\Helper\BigInteger;
+use phpseclib\Math\BigInteger;
 
-class AMQPWriter extends AMQPByteStream
+class AMQPWriter extends AbstractClient
 {
     /** @var string */
     protected $out = '';
@@ -174,7 +173,7 @@ class AMQPWriter extends AMQPByteStream
         }
 
         //Numeric strings >PHP_INT_MAX on 32bit are casted to PHP_INT_MAX, damn PHP
-        if (!self::PLATFORM_64BIT && is_string($n)) {
+        if (!$this->is64bits && is_string($n)) {
             $n = (float) $n;
         }
         $this->out .= pack('N', $n);
@@ -186,7 +185,7 @@ class AMQPWriter extends AMQPByteStream
      * @param int $n
      * @return $this
      */
-    private function writeSignedLong($n)
+    private function write_signed_long($n)
     {
         if (($n < -2147483648) || ($n > 2147483647)) {
             throw new AMQPInvalidArgumentException('Signed long out of range: ' . $n);
@@ -212,7 +211,7 @@ class AMQPWriter extends AMQPByteStream
                 throw new AMQPOutOfRangeException('Longlong out of range: ' . $n);
             }
 
-            if (self::PLATFORM_64BIT) {
+            if ($this->is64bits) {
                 $res = pack('J', $n);
                 $this->out .= $res;
             } else {
@@ -223,10 +222,7 @@ class AMQPWriter extends AMQPByteStream
         }
 
         $value = new BigInteger($n);
-        if (
-            $value->compare(self::getBigInteger('0')) < 0
-            || $value->compare(self::getBigInteger('FFFFFFFFFFFFFFFF', 16)) > 0
-        ) {
+        if ($value->compare(self::getBigInteger('0')) < 0 || $value->compare(self::getBigInteger('FFFFFFFFFFFFFFFF', 16)) > 0) {
             throw new AMQPInvalidArgumentException('Longlong out of range: ' . $n);
         }
 
@@ -243,7 +239,7 @@ class AMQPWriter extends AMQPByteStream
     public function write_signed_longlong($n)
     {
         if (is_int($n)) {
-            if (self::PLATFORM_64BIT) {
+            if ($this->is64bits) {
                 // q is for 64-bit signed machine byte order
                 $packed = pack('q', $n);
                 if (self::isLittleEndian()) {
@@ -260,10 +256,7 @@ class AMQPWriter extends AMQPByteStream
         }
 
         $value = new BigInteger($n);
-        if (
-            $value->compare(self::getBigInteger('-8000000000000000', 16)) < 0
-            || $value->compare(self::getBigInteger('7FFFFFFFFFFFFFFF', 16)) > 0
-        ) {
+        if ($value->compare(self::getBigInteger('-8000000000000000', 16)) < 0 || $value->compare(self::getBigInteger('7FFFFFFFFFFFFFFF', 16)) > 0) {
             throw new AMQPInvalidArgumentException('Signed longlong out of range: ' . $n);
         }
 
@@ -283,12 +276,6 @@ class AMQPWriter extends AMQPByteStream
      */
     public function write_shortstr($s)
     {
-        if ($s === null) {
-            $this->write_octet(0);
-
-            return $this;
-        }
-
         $len = mb_strlen($s, 'ASCII');
         if ($len > 255) {
             throw new AMQPInvalidArgumentException('String too long');
@@ -308,12 +295,6 @@ class AMQPWriter extends AMQPByteStream
      */
     public function write_longstr($s)
     {
-        if ($s === null) {
-            $this->write_long(0);
-
-            return $this;
-        }
-
         $this->write_long(mb_strlen($s, 'ASCII'));
         $this->out .= $s;
 
@@ -335,7 +316,7 @@ class AMQPWriter extends AMQPByteStream
         $data = new self();
 
         foreach ($a as $v) {
-            $data->writeValue($v[0], $v[1]);
+            $data->write_value($v[0], $v[1]);
         }
 
         $data = $data->getvalue();
@@ -370,11 +351,11 @@ class AMQPWriter extends AMQPByteStream
     {
         $typeIsSym = !($d instanceof AMQPTable); //purely for back-compat purposes
 
-        $table_data = new self();
+        $table_data = new AMQPWriter();
         foreach ($d as $k => $va) {
             list($ftype, $v) = $va;
             $table_data->write_shortstr($k);
-            $table_data->writeValue($typeIsSym ? AMQPAbstractCollection::getDataTypeForSymbol($ftype) : $ftype, $v);
+            $table_data->write_value($typeIsSym ? AMQPAbstractCollection::getDataTypeForSymbol($ftype) : $ftype, $v);
         }
 
         $table_data = $table_data->getvalue();
@@ -399,7 +380,7 @@ class AMQPWriter extends AMQPByteStream
      * @param int $type One of AMQPAbstractCollection::T_* constants
      * @param mixed $val
      */
-    private function writeValue($type, $val)
+    private function write_value($type, $val)
     {
         //This will find appropriate symbol for given data type for currently selected protocol
         //Also will raise an exception on unknown type
@@ -419,7 +400,7 @@ class AMQPWriter extends AMQPByteStream
                 $this->write_short($val);
                 break;
             case AMQPAbstractCollection::T_INT_LONG:
-                $this->writeSignedLong($val);
+                $this->write_signed_long($val);
                 break;
             case AMQPAbstractCollection::T_INT_LONG_U:
                 $this->write_long($val);
@@ -432,7 +413,7 @@ class AMQPWriter extends AMQPByteStream
                 break;
             case AMQPAbstractCollection::T_DECIMAL:
                 $this->write_octet($val->getE());
-                $this->writeSignedLong($val->getN());
+                $this->write_signed_long($val->getN());
                 break;
             case AMQPAbstractCollection::T_TIMESTAMP:
                 $this->write_timestamp($val);

@@ -1,5 +1,4 @@
 <?php
-
 namespace PhpAmqpLib\Exception;
 
 class AMQPBasicCancelException extends \Exception implements AMQPExceptionInterface

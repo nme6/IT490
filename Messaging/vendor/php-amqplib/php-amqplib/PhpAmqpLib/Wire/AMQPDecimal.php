@@ -1,9 +1,8 @@
 <?php
-
 namespace PhpAmqpLib\Wire;
 
 use PhpAmqpLib\Exception\AMQPOutOfBoundsException;
-use PhpAmqpLib\Helper\BigInteger;
+use phpseclib\Math\BigInteger;
 
 /**
  * AMQP protocol decimal value.

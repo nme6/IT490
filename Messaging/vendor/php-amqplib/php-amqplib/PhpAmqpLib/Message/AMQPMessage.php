@@ -100,7 +100,7 @@ class AMQPMessage
      *
      * @param bool $multiple If true, the delivery tag is treated as "up to and including",
      *                       so that multiple messages can be acknowledged with a single method.
-     * @since 2.12.0
+     * @since v2.12.0
      * @link https://www.rabbitmq.com/amqp-0-9-1-reference.html#basic.ack
      */
     public function ack($multiple = false)
@@ -117,7 +117,7 @@ class AMQPMessage
      *                       attempt fails the messages are discarded or dead-lettered.
      * @param bool $multiple If true, the delivery tag is treated as "up to and including",
      *                       so that multiple messages can be rejected with a single method.
-     * @since 2.12.0
+     * @since v2.12.0
      * @link https://www.rabbitmq.com/amqp-0-9-1-reference.html#basic.nack
      */
     public function nack($requeue = false, $multiple = false)
@@ -131,8 +131,8 @@ class AMQPMessage
      * Reject an incoming message.
      *
      * @param bool $requeue If requeue is true, the server will attempt to requeue the message.
-     *                     If requeue is false or the requeue attempt fails the messages are discarded or dead-lettered.
-     * @since 2.12.0
+     *                      If requeue is false or the requeue attempt fails the messages are discarded or dead-lettered.
+     * @since v2.12.0
      * @link https://www.rabbitmq.com/amqp-0-9-1-reference.html#basic.reject
      */
     public function reject($requeue = true)
@@ -159,7 +159,7 @@ class AMQPMessage
 
     /**
      * @return AMQPChannel|null
-     * @since 2.12.0
+     * @since v2.12.0
      */
     public function getChannel()
     {
@@ -170,7 +170,7 @@ class AMQPMessage
      * @param AMQPChannel $channel
      * @return $this
      * @throws \RuntimeException
-     * @since 2.12.0
+     * @since v2.12.0
      */
     public function setChannel($channel)
     {
@@ -189,7 +189,7 @@ class AMQPMessage
      * @param string $exchange
      * @param string $routingKey
      * @return $this
-     * @since 2.12.0
+     * @since v2.12.0
      */
     public function setDeliveryInfo($deliveryTag, $redelivered, $exchange, $routingKey)
     {
@@ -203,7 +203,7 @@ class AMQPMessage
 
     /**
      * @return bool|null
-     * @since 2.12.0
+     * @since v2.12.0
      */
     public function isRedelivered()
     {
@@ -212,7 +212,7 @@ class AMQPMessage
 
     /**
      * @return string|null
-     * @since 2.12.0
+     * @since v2.12.0
      */
     public function getExchange()
     {
@@ -221,7 +221,7 @@ class AMQPMessage
 
     /**
      * @return string|null
-     * @since 2.12.0
+     * @since v2.12.0
      */
     public function getRoutingKey()
     {
@@ -230,7 +230,7 @@ class AMQPMessage
 
     /**
      * @return string|null
-     * @since 2.12.0
+     * @since v2.12.0
      */
     public function getConsumerTag()
     {
@@ -240,7 +240,7 @@ class AMQPMessage
     /**
      * @param string $consumerTag
      * @return $this
-     * @since 2.12.0
+     * @since v2.12.0
      */
     public function setConsumerTag($consumerTag)
     {
@@ -252,7 +252,7 @@ class AMQPMessage
 
     /**
      * @return int|null
-     * @since 2.12.0
+     * @since v2.12.0
      */
     public function getMessageCount()
     {
@@ -262,7 +262,7 @@ class AMQPMessage
     /**
      * @param int $messageCount
      * @return $this
-     * @since 2.12.0
+     * @since v2.12.0
      */
     public function setMessageCount($messageCount)
     {
@@ -342,7 +342,7 @@ class AMQPMessage
     /**
      * @param int|string $deliveryTag
      * @return $this
-     * @since 2.12.0
+     * @since v2.12.0
      */
     public function setDeliveryTag($deliveryTag)
     {
@@ -525,7 +525,7 @@ class AMQPMessage
             }
 
             $flag_bits |= (1 << $shift);
-            if ($prototype !== 'bit') {
+            if ($prototype != 'bit') {
                 $raw_bytes->{'write_' . $prototype}($val);
             }
 

@@ -1,26 +1,25 @@
 # php-amqplib #
 
-![PHPUnit tests](https://github.com/php-amqplib/php-amqplib/workflows/PHPUnit%20tests/badge.svg)
 [![Latest Version on Packagist][ico-version]][link-packagist]
-[![Total Downloads][ico-downloads]][link-downloads]
 [![Software License][ico-license]](LICENSE)
-
-[![codecov](https://codecov.io/gh/php-amqplib/php-amqplib/branch/master/graph/badge.svg?token=tgeYkUsaDM)](https://codecov.io/gh/php-amqplib/php-amqplib)
+[![Build Status][ico-travis]][link-travis]
 [![Coverage Status][ico-scrutinizer]][link-scrutinizer]
 [![Quality Score][ico-code-quality]][link-code-quality]
+[![Total Downloads][ico-downloads]][link-downloads]
 
 This library is a _pure PHP_ implementation of the [AMQP 0-9-1 protocol](http://www.rabbitmq.com/tutorials/amqp-concepts.html).
 It's been tested against [RabbitMQ](http://www.rabbitmq.com/).
 
 The library was used for the PHP examples of [RabbitMQ in Action](http://manning.com/videla/) and the [official RabbitMQ tutorials](http://www.rabbitmq.com/tutorials/tutorial-one-php.html).
 
-Please note that this project is released with a [Contributor Code of Conduct](.github/CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
 ## Project Maintainers
 
-Thanks to [videlalvaro](https://github.com/videlalvaro) and [postalservice14](https://github.com/postalservice14) for creating `php-amqplib`.
+Thanks to [videlalvaro](https://github.com/videlalvaro) and [postalservice14](https://github.com/postalservice14) for their hard work maintaining php-amqplib! The library wouldn't be where it is without them.
 
-The package is now maintained by [Ramūnas Dronga](https://github.com/ramunasd), [Luke Bakken](https://github.com/lukebakken) and several VMware engineers working on RabbitMQ.
+The package is now maintained by [nubeiro](https://github.com/nubeiro) and several Pivotal engineers
+working on RabbitMQ and related projects.
 
 ## Supported RabbitMQ Versions ##
 
@@ -43,7 +42,7 @@ Extensions that modify existing methods like `alternate exchanges` are also supp
 
 * [enqueue/amqp-lib](https://github.com/php-enqueue/amqp-lib) is a [amqp interop](https://github.com/queue-interop/queue-interop#amqp-interop) compatible wrapper.
 
-* [AMQProxy](https://github.com/cloudamqp/amqproxy) is a proxy library with connection and channel pooling/reusing. This allows for lower connection and channel churn when using php-amqplib, leading to less CPU usage of RabbitMQ.
+* [AMQProxy](https://github.com/cloudamqp/amqproxy) is a proxy library with connection and channel pooling/reusing. This allows for lower connection and channel churn when using php-amqplib, leading to less CPU usage of RabbitMQ. 
 
 ## Setup ##
 
@@ -383,11 +382,13 @@ Author: Vadim Zaliva <lord@crocodile.org>
 
 [ico-version]: https://img.shields.io/packagist/v/php-amqplib/php-amqplib.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-LGPL_2.1-brightgreen.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/php-amqplib/php-amqplib/master.svg?style=flat-square
 [ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/php-amqplib/php-amqplib.svg?style=flat-square
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/php-amqplib/php-amqplib.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/php-amqplib/php-amqplib.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/php-amqplib/php-amqplib
+[link-travis]: https://travis-ci.org/php-amqplib/php-amqplib
 [link-scrutinizer]: https://scrutinizer-ci.com/g/php-amqplib/php-amqplib/code-structure
 [link-code-quality]: https://scrutinizer-ci.com/g/php-amqplib/php-amqplib
 [link-downloads]: https://packagist.org/packages/php-amqplib/php-amqplib

@@ -7,15 +7,12 @@ use PhpAmqpLib\Exception\AMQPBasicCancelException;
 use PhpAmqpLib\Exception\AMQPChannelClosedException;
 use PhpAmqpLib\Exception\AMQPConnectionBlockedException;
 use PhpAmqpLib\Exception\AMQPConnectionClosedException;
-use PhpAmqpLib\Exception\AMQPNoDataException;
 use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 use PhpAmqpLib\Exception\AMQPRuntimeException;
-use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Helper\Assert;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Wire;
 use PhpAmqpLib\Wire\AMQPReader;
-use PhpAmqpLib\Wire\AMQPTable;
 use PhpAmqpLib\Wire\AMQPWriter;
 
 class AMQPChannel extends AbstractChannel
@@ -34,9 +31,6 @@ class AMQPChannel extends AbstractChannel
 
     /** @var bool */
     protected $active = true;
-
-    /** @var bool */
-    protected $stopConsume = false;
 
     /** @var array */
     protected $alerts = array();
@@ -95,7 +89,7 @@ class AMQPChannel extends AbstractChannel
 
     /**
      * Maximum time to wait for operations on this channel, in seconds.
-     * @var float
+     * @var float $channel_rpc_timeout
      */
     protected $channel_rpc_timeout;
 
@@ -104,10 +98,7 @@ class AMQPChannel extends AbstractChannel
      * @param int|null $channel_id
      * @param bool $auto_decode
      * @param int|float $channel_rpc_timeout
-     * @throws \PhpAmqpLib\Exception\AMQPOutOfBoundsException
-     * @throws \PhpAmqpLib\Exception\AMQPRuntimeException
-     * @throws \PhpAmqpLib\Exception\AMQPTimeoutException
-     * @throws \PhpAmqpLib\Exception\AMQPConnectionClosedException
+     * @throws \Exception
      */
     public function __construct($connection, $channel_id = null, $auto_decode = true, $channel_rpc_timeout = 0)
     {
@@ -162,7 +153,7 @@ class AMQPChannel extends AbstractChannel
      *
      * @param AMQPReader $reader
      */
-    protected function channel_alert(AMQPReader $reader): void
+    protected function channel_alert($reader)
     {
         $reply_code = $reader->read_short();
         $reply_text = $reader->read_shortstr();
@@ -204,14 +195,14 @@ class AMQPChannel extends AbstractChannel
 
         return $this->wait(array(
             $this->waitHelper->get_wait('channel.close_ok')
-        ), false, $this->channel_rpc_timeout);
+        ), false, $this->channel_rpc_timeout );
     }
 
     /**
      * @param AMQPReader $reader
-     * @throws AMQPProtocolChannelException
+     * @throws \PhpAmqpLib\Exception\AMQPProtocolChannelException
      */
-    protected function channel_close(AMQPReader $reader): void
+    protected function channel_close($reader)
     {
         $reply_code = $reader->read_short();
         $reply_text = $reader->read_shortstr();
@@ -250,7 +241,10 @@ class AMQPChannel extends AbstractChannel
         ), false, $this->channel_rpc_timeout);
     }
 
-    protected function channel_flow(AMQPReader $reader): void
+    /**
+     * @param AMQPReader $reader
+     */
+    protected function channel_flow($reader)
     {
         $this->active = $reader->read_bit();
         $this->x_flow_ok($this->active);
@@ -265,17 +259,18 @@ class AMQPChannel extends AbstractChannel
         $this->send_method_frame(array($class_id, $method_id), $args);
     }
 
-    protected function channel_flow_ok(AMQPReader $reader): bool
+    /**
+     * @param AMQPReader $reader
+     * @return bool
+     */
+    protected function channel_flow_ok($reader)
     {
         return $reader->read_bit();
     }
 
     /**
      * @param string $out_of_band
-     * @throws \PhpAmqpLib\Exception\AMQPOutOfBoundsException
-     * @throws \PhpAmqpLib\Exception\AMQPRuntimeException
-     * @throws \PhpAmqpLib\Exception\AMQPTimeoutException
-     * @throws \PhpAmqpLib\Exception\AMQPConnectionClosedException
+     * @throws \PhpAmqpLib\Exception\AMQPTimeoutException if the specified operation timeout was exceeded
      * @return mixed
      */
     protected function x_open($out_of_band = '')
@@ -339,9 +334,9 @@ class AMQPChannel extends AbstractChannel
      * Grants access to server resources
      *
      * @param AMQPReader $reader
-     * @return int
+     * @return string
      */
-    protected function access_request_ok(AMQPReader $reader): int
+    protected function access_request_ok($reader)
     {
         $this->default_ticket = $reader->read_short();
 
@@ -358,7 +353,7 @@ class AMQPChannel extends AbstractChannel
      * @param bool $auto_delete
      * @param bool $internal
      * @param bool $nowait
-     * @param AMQPTable|array $arguments
+     * @param array $arguments
      * @param int|null $ticket
      * @throws \PhpAmqpLib\Exception\AMQPTimeoutException if the specified operation timeout was exceeded
      * @return mixed|null
@@ -455,7 +450,7 @@ class AMQPChannel extends AbstractChannel
      * @param string $source
      * @param string $routing_key
      * @param bool $nowait
-     * @param \PhpAmqpLib\Wire\AMQPTable|array $arguments
+     * @param array $arguments
      * @param int|null $ticket
      * @throws \PhpAmqpLib\Exception\AMQPTimeoutException if the specified operation timeout was exceeded
      * @return mixed|null
@@ -504,7 +499,7 @@ class AMQPChannel extends AbstractChannel
      * @param string $source
      * @param string $routing_key
      * @param bool $nowait
-     * @param \PhpAmqpLib\Wire\AMQPTable|array $arguments
+     * @param array $arguments
      * @param int|null $ticket
      * @throws \PhpAmqpLib\Exception\AMQPTimeoutException if the specified operation timeout was exceeded
      * @return mixed
@@ -549,7 +544,7 @@ class AMQPChannel extends AbstractChannel
      * @param string $exchange
      * @param string $routing_key
      * @param bool $nowait
-     * @param \PhpAmqpLib\Wire\AMQPTable|array $arguments
+     * @param array $arguments
      * @param int|null $ticket
      * @throws \PhpAmqpLib\Exception\AMQPTimeoutException if the specified operation timeout was exceeded
      * @return mixed|null
@@ -597,7 +592,7 @@ class AMQPChannel extends AbstractChannel
      * @param string $queue
      * @param string $exchange
      * @param string $routing_key
-     * @param \PhpAmqpLib\Wire\AMQPTable|array $arguments
+     * @param array $arguments
      * @param int|null $ticket
      * @throws \PhpAmqpLib\Exception\AMQPTimeoutException if the specified operation timeout was exceeded
      * @return mixed
@@ -642,10 +637,10 @@ class AMQPChannel extends AbstractChannel
      * @param bool $exclusive
      * @param bool $auto_delete
      * @param bool $nowait
-     * @param array|AMQPTable $arguments
+     * @param array|\PhpAmqpLib\Wire\AMQPTable $arguments
      * @param int|null $ticket
+     * @throws \PhpAmqpLib\Exception\AMQPTimeoutException if the specified operation timeout was exceeded
      * @return array|null
-     *@throws \PhpAmqpLib\Exception\AMQPTimeoutException if the specified operation timeout was exceeded
      */
     public function queue_declare(
         $queue = '',
@@ -687,7 +682,7 @@ class AMQPChannel extends AbstractChannel
      * @param AMQPReader $reader
      * @return string[]
      */
-    protected function queue_declare_ok(AMQPReader $reader)
+    protected function queue_declare_ok($reader)
     {
         $queue = $reader->read_shortstr();
         $message_count = $reader->read_long();
@@ -734,9 +729,9 @@ class AMQPChannel extends AbstractChannel
      * Confirms deletion of a queue
      *
      * @param AMQPReader $reader
-     * @return int|string
+     * @return string
      */
-    protected function queue_delete_ok(AMQPReader $reader)
+    protected function queue_delete_ok($reader)
     {
         return $reader->read_long();
     }
@@ -770,9 +765,9 @@ class AMQPChannel extends AbstractChannel
      * Confirms a queue purge
      *
      * @param AMQPReader $reader
-     * @return int|string
+     * @return string
      */
-    protected function queue_purge_ok(AMQPReader $reader)
+    protected function queue_purge_ok($reader)
     {
         return $reader->read_long();
     }
@@ -780,7 +775,7 @@ class AMQPChannel extends AbstractChannel
     /**
      * Acknowledges one or more messages
      *
-     * @param int $delivery_tag
+     * @param string $delivery_tag
      * @param bool $multiple
      */
     public function basic_ack($delivery_tag, $multiple = false)
@@ -795,7 +790,7 @@ class AMQPChannel extends AbstractChannel
      * @param AMQPReader $reader
      * @throws AMQPRuntimeException
      */
-    protected function basic_ack_from_server(AMQPReader $reader): void
+    protected function basic_ack_from_server(AMQPReader $reader)
     {
         $delivery_tag = $reader->read_longlong();
         $multiple = (bool) $reader->read_bit();
@@ -816,7 +811,7 @@ class AMQPChannel extends AbstractChannel
      * @param AMQPReader $reader
      * @throws AMQPRuntimeException
      */
-    protected function basic_nack_from_server(AMQPReader $reader): void
+    protected function basic_nack_from_server($reader)
     {
         $delivery_tag = $reader->read_longlong();
         $multiple = (bool) $reader->read_bit();
@@ -834,7 +829,7 @@ class AMQPChannel extends AbstractChannel
     /**
      * Handles the deletion of messages from this->publishedMessages and dispatches them to the $handler
      *
-     * @param int $delivery_tag
+     * @param int|string $delivery_tag
      * @param bool $multiple
      * @param callable $handler
      */
@@ -846,6 +841,7 @@ class AMQPChannel extends AbstractChannel
             foreach ($keys as $key) {
                 $this->internal_ack_handler($key, false, $handler);
             }
+
         } else {
             $message = $this->get_and_unset_message($delivery_tag);
             $this->dispatch_to_handler($handler, array($message));
@@ -862,6 +858,7 @@ class AMQPChannel extends AbstractChannel
         $value = (int) $value;
         $keys = array_reduce(
             array_keys($messages),
+
             /**
              * @param string $key
              */
@@ -881,7 +878,7 @@ class AMQPChannel extends AbstractChannel
     /**
      * Rejects one or several received messages
      *
-     * @param int $delivery_tag
+     * @param string $delivery_tag
      * @param bool $multiple
      * @param bool $requeue
      */
@@ -930,7 +927,7 @@ class AMQPChannel extends AbstractChannel
      * @param AMQPReader $reader
      * @return string
      */
-    protected function basic_cancel_ok(AMQPReader $reader): string
+    protected function basic_cancel_ok($reader)
     {
         $consumerTag = $reader->read_shortstr();
         unset($this->callbacks[$consumerTag]);
@@ -948,10 +945,8 @@ class AMQPChannel extends AbstractChannel
 
     /**
      * Start a queue consumer.
-     * This method asks the server to start a "consumer", which is a transient request for messages
-     * from a specific queue.
+     * This method asks the server to start a "consumer", which is a transient request for messages from a specific queue.
      * Consumers last as long as the channel they were declared on, or until the client cancels them.
-     *
      * @link https://www.rabbitmq.com/amqp-0-9-1-reference.html#basic.consume
      *
      * @param string $queue
@@ -962,8 +957,7 @@ class AMQPChannel extends AbstractChannel
      * @param bool $nowait
      * @param callable|null $callback
      * @param int|null $ticket
-     * @param \PhpAmqpLib\Wire\AMQPTable|array $arguments
-     *
+     * @param array $arguments
      * @throws \PhpAmqpLib\Exception\AMQPTimeoutException if the specified operation timeout was exceeded
      * @throws \InvalidArgumentException
      * @return string
@@ -1020,7 +1014,7 @@ class AMQPChannel extends AbstractChannel
      * @param AMQPReader $reader
      * @return string
      */
-    protected function basic_consume_ok(AMQPReader $reader): string
+    protected function basic_consume_ok($reader)
     {
         return $reader->read_shortstr();
     }
@@ -1031,7 +1025,7 @@ class AMQPChannel extends AbstractChannel
      * @param AMQPReader $reader
      * @param AMQPMessage $message
      */
-    protected function basic_deliver(AMQPReader $reader, AMQPMessage $message): void
+    protected function basic_deliver($reader, $message)
     {
         $consumer_tag = $reader->read_shortstr();
         $delivery_tag = $reader->read_longlong();
@@ -1085,7 +1079,7 @@ class AMQPChannel extends AbstractChannel
      * @param AMQPMessage $message
      * @return AMQPMessage
      */
-    protected function basic_get_ok(AMQPReader $reader, AMQPMessage $message): AMQPMessage
+    protected function basic_get_ok($reader, $message)
     {
         $delivery_tag = $reader->read_longlong();
         $redelivered = $reader->read_bit();
@@ -1109,7 +1103,7 @@ class AMQPChannel extends AbstractChannel
      * @param int $ticket
      * @return mixed
      */
-    private function prePublish($exchange, $routing_key, $mandatory, $immediate, $ticket)
+    private function pre_publish($exchange, $routing_key, $mandatory, $immediate, $ticket)
     {
         $cache_key = sprintf(
             '%s|%s|%s|%s|%s',
@@ -1164,7 +1158,7 @@ class AMQPChannel extends AbstractChannel
     ) {
         $this->checkConnection();
         $pkt = new AMQPWriter();
-        $pkt->write($this->prePublish($exchange, $routing_key, $mandatory, $immediate, $ticket));
+        $pkt->write($this->pre_publish($exchange, $routing_key, $mandatory, $immediate, $ticket));
 
         try {
             $this->connection->send_content(
@@ -1228,8 +1222,6 @@ class AMQPChannel extends AbstractChannel
             return;
         }
 
-        $this->checkConnection();
-
         /** @var AMQPWriter $pkt */
         $pkt = new AMQPWriter();
 
@@ -1242,7 +1234,7 @@ class AMQPChannel extends AbstractChannel
             $mandatory = isset($m[3]) ? $m[3] : false;
             $immediate = isset($m[4]) ? $m[4] : false;
             $ticket = isset($m[5]) ? $m[5] : null;
-            $pkt->write($this->prePublish($exchange, $routing_key, $mandatory, $immediate, $ticket));
+            $pkt->write($this->pre_publish($exchange, $routing_key, $mandatory, $immediate, $ticket));
 
             $this->connection->prepare_content(
                 $this->channel_id,
@@ -1260,6 +1252,7 @@ class AMQPChannel extends AbstractChannel
             }
         }
 
+        $this->checkConnection();
         $this->connection->write($pkt->getvalue());
         $this->batch_messages = array();
     }
@@ -1322,7 +1315,7 @@ class AMQPChannel extends AbstractChannel
     /**
      * Rejects an incoming message
      *
-     * @param int $delivery_tag
+     * @param string $delivery_tag
      * @param bool $requeue
      */
     public function basic_reject($delivery_tag, $requeue)
@@ -1337,7 +1330,7 @@ class AMQPChannel extends AbstractChannel
      * @param AMQPReader $reader
      * @param AMQPMessage $message
      */
-    protected function basic_return(AMQPReader $reader, AMQPMessage $message)
+    protected function basic_return($reader, $message)
     {
         $callback = $this->basic_return_callback;
         if (!is_callable($callback)) {
@@ -1567,57 +1560,5 @@ class AMQPChannel extends AbstractChannel
         if ($this->connection->isBlocked()) {
             throw new AMQPConnectionBlockedException();
         }
-    }
-
-    /**
-     * Wait and process all incoming messages in an endless loop,
-     * until connection exception or manual stop using self::stopConsume()
-     *
-     * @param float $maximumPoll Maximum time in seconds between read attempts
-     * @throws \PhpAmqpLib\Exception\AMQPOutOfBoundsException
-     * @throws \PhpAmqpLib\Exception\AMQPRuntimeException
-     * @throws \PhpAmqpLib\Exception\AMQPConnectionClosedException
-     * @throws \ErrorException
-     * @since 3.2.0
-     */
-    public function consume(float $maximumPoll = 10.0): void
-    {
-        $this->checkConnection();
-
-        if ($this->stopConsume) {
-            $this->stopConsume = false;
-            return;
-        }
-
-        $timeout = $this->connection->getReadTimeout();
-        $heartBeat = $this->connection->getHeartbeat();
-        if ($heartBeat > 2) {
-            $timeout = min($timeout, floor($heartBeat / 2));
-        }
-        $timeout = max(min($timeout, $maximumPoll), 1);
-        while ($this->is_consuming() || !empty($this->method_queue)) {
-            if ($this->stopConsume) {
-                $this->stopConsume = false;
-                return;
-            }
-            try {
-                $this->wait(null, false, $timeout);
-            } catch (AMQPTimeoutException $exception) {
-                // something might be wrong, try to send heartbeat which involves select+write
-                $this->connection->checkHeartBeat();
-                continue;
-            } catch (AMQPNoDataException $exception) {
-                continue;
-            }
-        }
-    }
-
-    /**
-     * Stop AMQPChannel::consume() loop. Useful for signal handlers and other interrupts.
-     * @since 3.2.0
-     */
-    public function stopConsume()
-    {
-        $this->stopConsume = true;
     }
 }

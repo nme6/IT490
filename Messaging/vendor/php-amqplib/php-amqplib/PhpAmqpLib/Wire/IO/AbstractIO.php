@@ -2,8 +2,6 @@
 
 namespace PhpAmqpLib\Wire\IO;
 
-use PhpAmqpLib\Connection\AMQPConnectionConfig;
-use PhpAmqpLib\Exception\AMQPConnectionClosedException;
 use PhpAmqpLib\Exception\AMQPHeartbeatMissedException;
 use PhpAmqpLib\Exception\AMQPIOWaitException;
 use PhpAmqpLib\Wire\AMQPWriter;
@@ -11,9 +9,6 @@ use PhpAmqpLib\Wire\AMQPWriter;
 abstract class AbstractIO
 {
     const BUFFER_SIZE = 8192;
-
-    /** @var null|AMQPConnectionConfig */
-    protected $config;
 
     /** @var string */
     protected $host;
@@ -24,10 +19,10 @@ abstract class AbstractIO
     /** @var int|float */
     protected $connection_timeout;
 
-    /** @var float */
+    /** @var int|float */
     protected $read_timeout;
 
-    /** @var float */
+    /** @var int|float */
     protected $write_timeout;
 
     /** @var int */
@@ -78,22 +73,20 @@ abstract class AbstractIO
 
     /**
      * @param int|null $sec
-     * @param int $usec
+     * @param int|null $usec
      * @return int
      * @throws \PhpAmqpLib\Exception\AMQPIOException
      * @throws \PhpAmqpLib\Exception\AMQPRuntimeException
      */
-    public function select(?int $sec, int $usec = 0)
+    public function select($sec, $usec)
     {
         $this->check_heartbeat();
-        $this->setErrorHandler();
+        $this->set_error_handler();
         try {
             $result = $this->do_select($sec, $usec);
-            $this->throwOnError();
+            $this->cleanup_error_handler();
         } catch (\ErrorException $e) {
             throw new AMQPIOWaitException($e->getMessage(), $e->getCode(), $e);
-        } finally {
-            $this->restoreErrorHandler();
         }
 
         if ($this->canDispatchPcntlSignal) {
@@ -110,11 +103,10 @@ abstract class AbstractIO
 
     /**
      * @param int|null $sec
-     * @param int $usec
+     * @param int|null $usec
      * @return int|bool
-     * @throws AMQPConnectionClosedException
      */
-    abstract protected function do_select(?int $sec, int $usec);
+    abstract protected function do_select($sec, $usec);
 
     /**
      * Set ups the connection.
@@ -125,14 +117,9 @@ abstract class AbstractIO
     abstract public function connect();
 
     /**
-     * Set connection params connection tune(negotiation).
-     * @param int $heartbeat
+     * @return resource
      */
-    public function afterTune(int $heartbeat): void
-    {
-        $this->heartbeat = $heartbeat;
-        $this->initial_heartbeat = $heartbeat;
-    }
+    abstract public function getSocket();
 
     /**
      * Heartbeat logic: check connection health here
@@ -177,17 +164,11 @@ abstract class AbstractIO
         return max($this->last_read, $this->last_write);
     }
 
-    public function getReadTimeout(): float
-    {
-        return $this->read_timeout;
-    }
-
     /**
      * @return $this
      */
     public function disableHeartbeat()
     {
-        $this->initial_heartbeat = $this->heartbeat;
         $this->heartbeat = 0;
 
         return $this;
@@ -219,14 +200,20 @@ abstract class AbstractIO
     /**
      * Begin tracking errors and set the error handler
      */
-    protected function setErrorHandler(): void
+    protected function set_error_handler()
     {
         $this->last_error = null;
         set_error_handler(array($this, 'error_handler'));
     }
 
-    protected function throwOnError(): void
+    /**
+     * throws an ErrorException if an error was handled
+     * @throws \ErrorException
+     */
+    protected function cleanup_error_handler()
     {
+        restore_error_handler();
+
         if ($this->last_error !== null) {
             throw new \ErrorException(
                 $this->last_error['errstr'],
@@ -236,11 +223,6 @@ abstract class AbstractIO
                 $this->last_error['errline']
             );
         }
-    }
-
-    protected function restoreErrorHandler(): void
-    {
-        restore_error_handler();
     }
 
     /**

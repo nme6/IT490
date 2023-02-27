@@ -1,5 +1,4 @@
 <?php
-
 namespace PhpAmqpLib\Helper;
 
 class MiscHelper

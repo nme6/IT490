@@ -1,5 +1,4 @@
 <?php
-
 namespace PhpAmqpLib\Exchange;
 
 final class AMQPExchangeType
