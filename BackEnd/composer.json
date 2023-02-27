@@ -1,9 +1,13 @@
 {
 	"scripts": {
 		"test": "php --version",
-		"sshRMQ": "ssh maximilian@192.168.191.22 'cd ~/Desktop/IT490/IT490/Messaging && ./remoteStart.sh'",
-		"sshApache2": "ssh nevans@192.168.191.182 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",
-		"sshDatabase": "ssh drajaram@192.168.191.48 'cd ~/IT490/IT490/Database && ./remoteStart.sh'"
+		"CheckRMQ": "ssh maximilian@192.168.191.111 'cd ~/IT490/IT490/Messaging && ./remoteStart.sh'",
+		"CheckApache2": "ssh neil@192.168.191.215 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",
+		"CheckDatabase": "ssh daniel@192.168.191.240 'cd ~/IT490/IT490/Database && ./remoteStart.sh'",
+
+		"sshRMQ": "ssh maximilian@192.168.191.111",
+		"sshApache2": "ssh neil@192.168.191.215",
+		"sshDatabase": "ssh daniel@192.168.191.240"
 	},
 	"require": {
 		"php-amqplib/php-amqplib": "^3.5"
