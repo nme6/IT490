@@ -17,11 +17,11 @@
 			"@apache2status"
 		],
 
-		"t3": ["#==============================[ Remote Code Scripts ]==============================#"],
-		"sshRMQ":["ssh maximilian@192.168.191.111 'cd ~/IT490/IT490/Messaging && ./remoteStart.sh'"],
-		"sshMySQL":["ssh daniel@192.168.191.240 'cd ~/IT490/IT490/Database && ./remoteStart.sh'"],
-		"sshBackEnd":["ssh ellis@192.168.191.67 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'"],
-		"sshFrontEnd": ["ssh neil@192.168.191.215 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'"],
+		"t3": ["==============================[ Remote Code Scripts ]=============================="],
+		"checkRMQ":["ssh maximilian@192.168.191.111 'cd ~/IT490/IT490/Messaging && ./remoteStart.sh'"],
+		"checkSQL":["ssh daniel@192.168.191.240 'cd ~/IT490/IT490/Database && ./remoteStart.sh'"],
+		"checkBE":["ssh ellis@192.168.191.67 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'"],
+		"checkFE": ["ssh neil@192.168.191.215 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'"],
 
 		"t4":["==============================[ SSH Scripts ]=============================="],
 		"sshMSG":["ssh maximilian@192.168.191.111"],
