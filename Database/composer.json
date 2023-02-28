@@ -1,7 +1,7 @@
 {
 	"scripts":{
                 "t1": "#==========================[ Remote Code Scripts ]==================================#",
-		"startMessaging":"ssh maximilian@192.168.191.111 'cd ~/Desktop/IT490/IT490/Messaging && ./remoteStart.sh'",
+		"startMessaging":"ssh maximilian@192.168.191.111 'cd ~/IT490/IT490/Messaging && ./remoteStart.sh'",
                 "startBackEnd":"ssh ellis@192.168.191.67 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'",
 		"startFrontEnd": "ssh neil@192.168.191.215 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",
 		"startDatabase": "ssh daniel@192.168.191.240 'cd ~/IT490/IT490/Database && ./remoteStart.sh'",
