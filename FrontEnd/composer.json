@@ -27,7 +27,15 @@
 		"sshMSG":["ssh maximilian@192.168.191.111"],
 		"sshDB":["ssh daniel@192.168.191.240"],
 		"sshBE":["ssh ellis@192.168.191.67"],
-		"sshFE":["ssh neil@192.168.191.215"]
+		"sshFE":["ssh neil@192.168.191.215"],
+
+		"t5":["==============================[ Check Services Script ]=============================="],
+		"checkServices": [
+			"@checkRMQ",
+			"@checkSQL",
+			"@checkBE",
+			"@checkFE"
+		]
 	},
 	"require": {
 		"php-amqplib/php-amqplib": "^3.5"
