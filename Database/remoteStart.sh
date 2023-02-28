@@ -10,9 +10,9 @@ if sudo systemctl is-active mysql > /dev/null 2>&1; then
 else
   # Start MySQL server
   sudo systemctl start mysql
-  echo "####################"
-  echo "MySQL server started"
-  echo "####################"
+  echo "#################################"
+  echo "MySQL was off, and is now started"
+  echo "#################################"
   sudo systemctl status mysql
-  echo "####################"
+  echo "#################################"
 fi
