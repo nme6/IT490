@@ -1,10 +1,10 @@
 {
 	"scripts":{
                 "t1": "#==========================[ Remote Code Scripts ]==================================#",
-		"startMessaging":"ssh maximilian@192.168.191.111 'cd ~/IT490/IT490/Messaging && ./remoteStart.sh'",
-                "startBackEnd":"ssh ellis@192.168.191.67 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'",
-		"startFrontEnd": "ssh neil@192.168.191.215 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",
-		"startDatabase": "ssh daniel@192.168.191.240 'cd ~/IT490/IT490/Database && ./remoteStart.sh'",
+		"checkMessaging":"ssh maximilian@192.168.191.111 'cd ~/IT490/IT490/Messaging && ./remoteStart.sh'",
+                "checkBackEnd":"ssh ellis@192.168.191.67 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'",
+		"checkFrontEnd": "ssh neil@192.168.191.215 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",
+		"checkDatabase": "ssh daniel@192.168.191.240 'cd ~/IT490/IT490/Database && ./remoteStart.sh'",
 		
 		"t2": "#==[ SSH Conntection ]==#",
 		"sshBE":"ssh ellis@192.168.191.67",
@@ -19,7 +19,15 @@
 		"mysqltest_user": "mysql -u test -p",
 		"mysqlstatus": "sudo systemctl status mysql",
 		"mysqlstop": "sudo systemctl stop mysql",
-		"mysqlbackup": "mysqldump -u test -p test mybackup.sql"
+		"mysqlbackup": "mysqldump -u test -p test mybackup.sql",
+
+		"t5": "#==========================[ Check Services ]==================================#",
+		"checkServices":[
+			"@checkMessaging",
+			"@checkBackEnd",
+			"@checkFrontEnd",
+			"@checkDatabase"
+	]
 	}
 }
 
