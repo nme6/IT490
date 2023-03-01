@@ -1,9 +1,19 @@
 {
 	"scripts": {
 		"test": "php --version",
+		
+		
+
 		"CheckRMQ": "ssh maximilian@192.168.191.111 'cd ~/IT490/IT490/Messaging && ./remoteStart.sh'",
 		"CheckApache2": "ssh neil@192.168.191.215 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",
 		"CheckDatabase": "ssh daniel@192.168.191.240 'cd ~/IT490/IT490/Database && ./remoteStart.sh'",
+		"CheckBackEnd": "ssh ellis@192.168.191.67 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'",	
+		"CheckServices": [
+			"@CheckRMQ",
+			"@CheckApache2",
+			"@CheckDatabase",
+			"@CheckBackEnd"
+		],
 
 		"sshRMQ": "ssh maximilian@192.168.191.111",
 		"sshApache2": "ssh neil@192.168.191.215",
