@@ -17,7 +17,24 @@
 
 		"sshRMQ": "ssh maximilian@192.168.191.111",
 		"sshApache2": "ssh neil@192.168.191.215",
-		"sshDatabase": "ssh daniel@192.168.191.240"
+		"sshDatabase": "ssh daniel@192.168.191.240",
+		
+		"ISSUE": "The register and login files do not run at the same time, only one runs then the others won't run",
+		"RegisterStep2": "php regStep2.php",
+		"ReigsterStep4": "php regStep4.php",
+		"StartRegister": [
+			"@RegisterStep2",
+			"@RegisterStep4"
+		],
+
+		"LoginStep2": "php logStep2.php",
+		"LoginStep4": "php logStep4.php",
+		"StartLogin": [
+			"@LoginStep2",
+			"@LoginStep4"
+		]
+		
+
 	},
 	"require": {
 		"php-amqplib/php-amqplib": "^3.5"
