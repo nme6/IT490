@@ -12,7 +12,7 @@ $channel = $connection->channel();
 // Declare the queue
 $channel->queue_declare('logDB2BE', false, false, false, false);
 
-echo "-={[BackEnd] Waiting for Database confirmation. To exit press CTRL+C}=-\n";
+echo "-={[BackEnd Log4] Waiting for Database confirmation. To exit press CTRL+C}=-\n";
 
 // Define the callback function to process messages from the queue
 $callback = function ($message) use ($channel) {
@@ -27,18 +27,22 @@ $callback = function ($message) use ($channel) {
     $hash = $data['hash'];
     $userFound = $data['userFound'];
 
+
     if(password_verify($password, $hash) && $userFound == true) {
 	    echo "Username and Password are valid" . "\n";
 	    $userAuth = true;
+	    $isValid = true;
     } else {
 	    echo "Username or Password is invalid" . "\n";
 	    $userAuth = false;
+	    $isValid = true;
     }
 
     $authBody = json_encode (
 	    [
 		    'userAuth' => $userAuth,
 		    'username' => $username,
+		    'isValid' => $isValid,
 	    ]
     );
 

@@ -12,17 +12,26 @@ $channel = $connection->channel();
 // Declare the queue
 $channel->queue_declare('regDB2BE', false, false, false, false);
 
-echo "-={[BackEnd] Waiting for Database confirmation. To exit press CTRL+C}=-\n";
+echo "-={[BackEnd Reg4] Waiting for Database confirmation. To exit press CTRL+C}=-\n";
 
 // Define the callback function to process messages from the queue
 $callback = function ($message) use ($channel) {
 
-    $data = $message->body;
+    //$data = $message->body;
+    $data = json_decode($message->getBody(), true);
+    $isValid = true; 
 
-   // $userExists = $data['userExists'];    
-    echo "Received user status: " . $message->body . "\n";
+    $userExists= $data['userExists'];
+    
+    $data = json_encode
+    (
+	    [
+		    'isValid' => $isValid,
+		    'userExists' => $userExists,
+	    ]
+    );
 
-
+   // echo "Received user status: " . $message->body . "\n";
 
     $userStatusConnection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
     $userStatusChannel = $userStatusConnection->channel();

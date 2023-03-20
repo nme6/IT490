@@ -11,7 +11,7 @@ $channel = $connection->channel();
 // Declare a queue for receiving messages
 $channel->queue_declare('logFE2BE', false, false, false, false);
 
-echo "-={[Back-end] Waiting for Front-end messages. To exit press CTRL+C}=-\n";
+echo "-={[BackEnd Log2] Waiting for Front-end messages. To exit press CTRL+C}=-\n";
 
 // Define the callback function to process received messages
 $callback = function ($message) use ($channel) {
@@ -58,6 +58,7 @@ $callback = function ($message) use ($channel) {
     {
 	    echo "\n[Login Unsuccessful ✗ ]\n";
 	    $userAuth = false;
+	    $isValid = false;
           
 	//Send a message in the JSON that will let the front end know there was an error. Include all validated variable true/false values
         $errorMessageBody = json_encode
@@ -67,6 +68,7 @@ $callback = function ($message) use ($channel) {
 			//'isValidEmail' => $isValidEmail,
 			'isValidPassword' => $isValidPassword,
 			'userAuth' => $userAuth,
+			'isValid' => $isValid,
 
 		]
         );
