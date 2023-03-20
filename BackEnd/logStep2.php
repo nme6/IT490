@@ -9,7 +9,7 @@ $connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin'
 $channel = $connection->channel();
 
 // Declare a queue for receiving messages
-$channel->queue_declare('regFE2BE', false, false, false, false);
+$channel->queue_declare('logFE2BE', false, false, false, false);
 
 echo "-={[Back-end] Waiting for Front-end messages. To exit press CTRL+C}=-\n";
 
@@ -22,82 +22,61 @@ $callback = function ($message) use ($channel) {
     // Get the data from the message body
     $username = $data['username'];
     $password = $data['password'];
-    $confirm = $data['confirm'];
-    $email = $data['email'];
-    $firstname = $data['firstname'];
-    $lastname = $data['lastname'];
-
+    //$email = $data['email'];
+    
     //Sanitize the username and password data
     $sanitizedUsername = filter_var($username, FILTER_SANITIZE_STRING);
     $sanitizedPassword = filter_var($password, FILTER_SANITIZE_STRING);
-    $sanitizedConfirm = filter_var($confirm, FILTER_SANITIZE_STRING);
-    $sanitizedEmail = filter_var($email, FILTER_SANITIZE_EMAIL);
-    $sanitizedFirstname = filter_var($firstname, FILTER_SANITIZE_EMAIL);
-    $sanitizedLastname = filter_var($lastname, FILTER_SANITIZE_EMAIL);
-
+    //$sanitizedEmail = filter_var($email, FILTER_SANITIZE_EMAIL);
+    
 //##########################[Validation of Variables for Registration]#############################
 //Check for valid Email FORMAT (Not database entry)
-    if (preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(edu|[a-zA-Z]{2,})$/', $sanitizedEmail)) {
-	   $isValidEmail = true; echo "[Valid Email ✓ ]\n";
-    } else {
-	   $isValidEmail = false; echo "[Invalid Email ✗ ]\n";
-    }
+   // if (preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(edu|[a-zA-Z]{2,})$/', $sanitizedEmail)) {
+	  // $isValidEmail = true; echo "[Valid Email ✓ ]\n";
+   // } else {
+	  // $isValidEmail = false; echo "[Invalid Email ✗ ]\n";
+    // }
+
+
 //Check for valid Username FORMAT (Not database entry)
     if (preg_match('/^[a-zA-Z0-9_]+$/', $sanitizedUsername)) {
 	   $isValidUsername = true; echo "[Valid Username ✓ ]\n";
     } else {
 	   $isValidUsername = false; echo "[Invalid Username ✗ ]\n";
     }
-//Check for valid Firstname
-    if (preg_match('/^[a-zA-Z]+$/', $sanitizedFirstname)){
-            $isValidFirstname = true; echo "[Valid Firstname ✓ ]\n";	
-    } else {
-	    $isValidFirstname = false; echo "[Invalid Firstname ✗ ]\n";
-    }
-//Check for a valid Lastname
-    if (preg_match('/^[a-zA-Z]+$/', $sanitizedLastname)){
-            $isValidLastname = true; echo "[Valid Lastname ✓ ]\n";
-    } else {
-            $isValidLastname = false; echo "[Invalid Lastname ✗ ]\n";
-    }
+
 //Check if password is using a valid format (At least 1 letter, at least 1 digit and at least 8 chars)
     if (preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $sanitizedPassword)) {
 	    $isValidPassword = true; echo "[Valid Password Format ✓ ]\n";
     } else {
     	    $isValidPassword = false; echo "[Invalid Password Format ✗ ]\n";
     }
-//Check if the Two Passwords match:
-    if ($sanitizedPassword == $sanitizedConfirm){
-	    $isMatchingPassword = true; echo "[Passwords match ✓ ]\n";
-    } else {
-    	    $isMatchingPassword = false; echo "[Passwords do not match ✗ ]\n";
-    }
 
-//#################################[Registration Validation]##########################################	    
-    if (!($isValidEmail && $isValidUsername && $isValidFirstname && $isValidLastname && $isValidPassword && $isMatchingPassword)) 
+
+//#################################[Login Validation]##########################################	    
+    if (!($isValidUsername && $isValidPassword)) 
     {
-        echo "\n[Register Unsuccessful ✗ ]\n";
-	//$userExists = true;          
+	    echo "\n[Login Unsuccessful ✗ ]\n";
+	    $userAuth = false;
+          
 	//Send a message in the JSON that will let the front end know there was an error. Include all validated variable true/false values
         $errorMessageBody = json_encode
         (
-                [
-			'isValidEmail' => $isValidEmail,
+		[
 			'isValidUsername' => $isValidUsername,
-			'isValidFirstname' => $isValidFirstname,
-			'isValidLastname' => $isValidLastname,
+			//'isValidEmail' => $isValidEmail,
 			'isValidPassword' => $isValidPassword,
-			'isMatchingPassword' => $isMatchingPassword,
-			//'userExists' => $userExists,
-                ]
+			'userAuth' => $userAuth,
+
+		]
         );
 
         // Send a new error message to FrontEnd 
         $errorConnection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
         $errorChannel = $errorConnection->channel();
-        $errorChannel->queue_declare('regBE2FE', false, false, false, false);
+        $errorChannel->queue_declare('logBE2FE', false, false, false, false);
         $errorMessage = new AMQPMessage($errorMessageBody);
-        $errorChannel->basic_publish($errorMessage, '', 'regBE2FE');
+        $errorChannel->basic_publish($errorMessage, '', 'logBE2FE');
         $errorChannel->close();
 	$errorConnection->close();
 
@@ -108,33 +87,33 @@ $callback = function ($message) use ($channel) {
 	echo "\n[Successfully Sent to Database ✓ ]\n";
 	
 	// Hash the password using bcrypt
-    	$hashPassword = password_hash($sanitizedPassword, PASSWORD_BCRYPT); 
+    	//$hashPassword = password_hash($sanitizedPassword, PASSWORD_BCRYPT); 
 
     	//Funnel everything back into the json. Also add the salt value.
     	$successMessageBody = json_encode
     	(	
         	[
-	       		'username' => $sanitizedUsername,
-               		'password' => $hashPassword,
-              		'email' => $sanitizedEmail,
-               		'firstname' => $sanitizedFirstname,
-               		'lastname' => $sanitizedLastname
+	       		
+               		'password' => $sanitizedPassword,
+              		'username' => $sanitizedUsername,
+               		
+               		
         	]
     	);
 
     	// Send a new message to the database
     	$successConnection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
     	$successChannel = $successConnection->channel();
-    	$successChannel->queue_declare('regBE2DB', false, false, false, false);
+    	$successChannel->queue_declare('logBE2DB', false, false, false, false);
     	$successMessage = new AMQPMessage($successMessageBody);
-    	$successChannel->basic_publish($successMessage, '', 'regBE2DB');
+    	$successChannel->basic_publish($successMessage, '', 'logBE2DB');
     	$successChannel->close();
     	$successConnection->close();
     }
 };
 
 // Start consuming messages from the queue
-$channel->basic_consume('regFE2BE', '', false, true, false, false, $callback);
+$channel->basic_consume('logFE2BE', '', false, true, false, false, $callback);
 
 // Keep consuming messages until the channel is closed
 while ($channel->is_open()) {
