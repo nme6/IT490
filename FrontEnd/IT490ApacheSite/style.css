@@ -1,0 +1,19 @@
+@font-face {
+  font-family: 'Pokemon Solid';
+  src: url('Pokemon Solid.ttf') format('truetype'),
+  font-weight: normal;
+  font-style: normal;
+}
+
+p {
+  font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, "sans-serif";
+}
+
+.pLimiter {
+  max-width: 77.5%; /* Change this value to your desired maximum width */
+  margin: 0 auto; /* Center the element horizontally */
+}
+
+.imageFlipper {
+  transform: scaleX(-1);
+}
