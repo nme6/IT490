@@ -17,7 +17,7 @@ echo "-={[BackEnd Reg4] Waiting for Database confirmation. To exit press CTRL+C}
 // Define the callback function to process messages from the queue
 $callback = function ($message) use ($channel) {
 
-    //$data = $message->body;
+    $status = $message->body;
     $data = json_decode($message->getBody(), true);
     $isValid = true; 
 
@@ -31,7 +31,7 @@ $callback = function ($message) use ($channel) {
 	    ]
     );
 
-   // echo "Received user status: " . $message->body . "\n";
+    echo "Received user status: " . $message->body . "\n";
 
     $userStatusConnection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
     $userStatusChannel = $userStatusConnection->channel();
