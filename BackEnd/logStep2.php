@@ -27,6 +27,7 @@ $callback = function ($message) use ($channel) {
     //Sanitize the username and password data
     $sanitizedUsername = filter_var($username, FILTER_SANITIZE_STRING);
     $sanitizedPassword = filter_var($password, FILTER_SANITIZE_STRING);
+    //echo $sanitizedUsername;
     //$sanitizedEmail = filter_var($email, FILTER_SANITIZE_EMAIL);
     
 //##########################[Validation of Variables for Registration]#############################
