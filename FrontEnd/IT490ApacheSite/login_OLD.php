@@ -29,15 +29,21 @@
       </div>
     </div>
   </nav>
-  <div class="container shadow min-vh-100 py-2">
-    <img src="All_Starter_Pokemon.png" alt="Starter Pokemon Image" class="mx-auto d-block" width="50%"/>
-    <img src="PokeHub_FinalLogo2.png" alt="PokeHub Logo" width="17.5%" class="mx-auto d-block" />
-    <h1 class="text-center">Welcome to PokéHub</h1>
-    <h3 class="text-center">The ultimate platform for Pokemon trainers and enthusiasts!</h3>
-    <p class="text-center pLimiter">With PokéHub, you can easily build your own custom Pokémon teams and explore detailed stats for each Pokémon. Our intuitive interface allows you to quickly search through a vast library of Pokémon, filter by type, generation, and more to find your perfect lineup. Whether you're a competitive battler or a casual player, PokéHub has everything you need to take your game to the next level. With our advanced team-building tools and comprehensive Pokémon stats, you can optimize your team's strengths and weaknesses and dominate the competition. Join the PokéHub community today and discover new strategies, connect with fellow trainers, and take your Pokémon journey to the next level. Sign up now and start building your dream team!</p>
-    <div class="py-3"></div>
-  </div>
-  <script src="script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  <div class="container-fluid col-lg-4 offset-lg-4">
+    <h1 style="padding-top:10px;">Login</h1>
+    <form onsubmit="return validate(this)" method="POST">
+        <div class="mb-3">
+            <label class="form-label" for="username">Username</label>
+            <input class="form-control" type="text" id="email" name="email" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="pw">Password</label>
+            <input class="form-control" type="password" id="pw" name="password" required minlength="8" />
+        </div>
+        <input type="submit" class="mt-3 btn btn-primary" value="Login" />
+    </form>
+</div>
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </body>
 </html>

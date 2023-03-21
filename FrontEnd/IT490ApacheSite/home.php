@@ -33,8 +33,9 @@
   <div class="container shadow min-vh-100 py-2">
     <img src="All_Starter_Pokemon.png" alt="Starter Pokemon Image" class="mx-auto d-block imageFlipper" width="50%"/>
     <img src="PokeHub_FinalLogo2.png" alt="PokeHub Logo" width="17.5%" class="mx-auto d-block" />
-    <h1 class="text-center">Welcome back, {User}</h1>
-    <p class="text-center">Note for Neil: Last time logged in will go here. Debating between links to team building page and state page (pokedex basically). Also debating the virtual fight viewer thingy from proposal (Ellis and Max suggested just comparing team health because lets be honest, he's not gonna check that deep in the code). </p>
+    <h1 class="text-center">Welcome back!</h1>
+    <!--<p class="text-center">Note for Neil: Last time logged in will go here. Debating between links to team building page and state page (pokedex basically). Also debating the virtual fight viewer thingy from proposal (Ellis and Max suggested just comparing team health because lets be honest, he's not gonna check that deep in the code). </p> -->
+    <p class="text-center">You've succesfully logged in! More to come soon!</p>
   </div>
   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
