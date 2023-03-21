@@ -12,7 +12,7 @@ $channel = $connection->channel();
 // Declare the queue
 $channel->queue_declare('logBE2FE', false, false, false, false);
 
-echo "-={[FrontEnd] Waiting for Back-end messages. To exit press CTRL+C}=-\n";
+echo "-={[FrontEnd Log5] Waiting for Back-end messages. To exit press CTRL+C}=-\n";
 
 // Define the callback function to process messages from the queue
 $callback = function ($message) {
