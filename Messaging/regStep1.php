@@ -9,10 +9,10 @@ use PhpAmqpLib\Message\AMQPMessage;
 //$password = $_POST['password'];
 //$email = $_POST['email'];
 
-$username = 'ZUCOZOCOteeest';
+$username = 'ZUCOZOShmuck';
 $password = 'ZCOZUCO1!';
 $confirm = 'ZCOZUCO1!';
-$email = 'asds2sdtest@gmail.edu';
+$email = 'yupolisepic@gmail.edu';
 $firstname = 'Shmaximilian';
 $lastname = 'Shmacobs';
 

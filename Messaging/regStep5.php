@@ -49,14 +49,6 @@ $callback = function ($message) {
 			//TODO for Neil: Redirects Page
                 }
         }
-
-
-	//echo "The value of userExists is: " . $userExists . "\n";
-	//if ($userExists == true){
-	//	echo "\nThe Username / Email is already taken.\n";
-	//} else {
-	//	echo "\nSuccessfully Registered Account!\n";
-	//}
 };
 
 // Consume messages from the queue
