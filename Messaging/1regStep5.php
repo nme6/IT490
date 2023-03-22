@@ -15,9 +15,9 @@ $channel->queue_declare('regBE2FE', false, false, false, false);
 echo "-={[FrontEnd] Waiting for Back-end messages. To exit press CTRL+C}=-\n";
 
 // Define the callback function to process messages from the queue
-$callback = function ($message) {
+$callback = function ($message) use ($channel){
 	echo "Received message from Back-end: " . $message->body . "\n";
-
+        
 	$data = json_decode($message->getBody(), true);
 	
 	$isValid = $data['isValid'];
@@ -48,21 +48,23 @@ $callback = function ($message) {
 
 			//TODO for Neil: Redirects Page
                 }
-        }
+	}
+	
 };
 
 // Consume messages from the queue
 $channel->basic_consume('regBE2FE', '', false, true, false, false, $callback);
 
-echo "Before wait!";
+echo "\n[Before wait!]\n\n";
 
 // Keep consuming messages until the channel is closed
 while ($channel->is_open()) {
 	$channel->wait();
-	echo "Wait!";
+	echo "\n[Wait!]\n";
+	break;
 }
 
-echo "After wait!";
+
 
 // Close the connection
 $channel->close();
