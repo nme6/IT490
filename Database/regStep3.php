@@ -43,7 +43,7 @@ $callback = function ($message) use ($channel){
 	}
 	
 	// Check if the user already exists in the database
-    	$sql_check = "SELECT * FROM users WHERE username = '$username'";
+    	$sql_check = "SELECT * FROM users WHERE username = '$username' OR email = '$email'";
     	$result = mysqli_query($conn, $sql_check);
 
     	if (mysqli_num_rows($result) > 0) {
