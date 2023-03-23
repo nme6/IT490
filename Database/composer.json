@@ -1,5 +1,9 @@
 {
+    "config": {
+        "process-timeout": 6600
+    },
 	"scripts":{
+		"process-timeout": 6600,
                 "t1": "#==========================[ Remote Code Scripts ]==================================#",
 		"startMessaging":"ssh maximilian@192.168.191.111 'cd ~/IT490/IT490/Messaging && ./remoteStart.sh'",
                 "startBackEnd":"ssh ellis@192.168.191.67 'cd ~/IT490/IT490/BackEnd && ./remoteStart.sh'",
@@ -16,10 +20,23 @@
 		"mysqlinstall": "sudo apt-get update && sudo apt-get install -y mysql-server",
   		"mysqlstart": "sudo systemctl start mysql",
 		"mysqlenter": "sudo mysql -u root -p",
-		"mysqltest_user": "mysql -u test -p",
+		"mysqltest": "mysql -u test -p",
 		"mysqlstatus": "sudo systemctl status mysql",
 		"mysqlstop": "sudo systemctl stop mysql",
-		"mysqlbackup": "mysqldump -u test -p test mybackup.sql"
-	}
-}
+		"mysqlbackup": "mysqldump -u test -p test mybackup.sql",
 
+		"t4": "#==========================[ Check Services ]==================================#",
+		"checkServices":[
+			"@checkMessaging",
+			"@checkBackEnd",
+			"@checkFrontEnd",
+			"@checkDatabase"
+	],
+		"t5": "#==========================[ Register and Login ]==================================#",
+		"RegisterStep3": "php regStep3.php",
+                "LoginStep3": "php logStep3.php"
+	},
+    "require": {
+        "php-amqplib/php-amqplib": "^3.5"
+    }
+}
