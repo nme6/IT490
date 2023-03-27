@@ -112,7 +112,7 @@
 	$channelReceive = $connectionReceive->channel();
 
 	// Declare the queue
-	$channelReceive->queue_declare('regBE2DB', false, false, false, false);
+	$channelReceive->queue_declare('regBE2FE', false, false, false, false);
 
 	// Define the callback function to process messages from the queue
 	$callbackReceive = function ($messageReceive) {
@@ -154,7 +154,7 @@
 	};
 
 	// Consume messages from the queue
-	$channelReceive->basic_consume('regBE2DB', '', false, true, false, false, $callbackReceive);
+	$channelReceive->basic_consume('regBE2FE', '', false, true, false, false, $callbackReceive);
 
 	// Keep consuming messages until the channel is closed
 	while ($channelReceive->is_open()) {
