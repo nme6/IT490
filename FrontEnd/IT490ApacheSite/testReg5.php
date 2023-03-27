@@ -41,6 +41,7 @@ $callback = function ($message) use ($channel) {
                 if ($userExists == false){
 			echo "\nSuccessfully Registered!\n";
 			//TODO for Neil: Redirects Page
+			die(header("Location:home.php"));
 
                 } else {
 			echo "\nUsername / Email is already taken!\n";
