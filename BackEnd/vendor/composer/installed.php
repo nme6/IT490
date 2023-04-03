@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'b9db514910c68fd7297a5e3d854fb99997448623',
+        'reference' => 'cf44bbfdebf3be2b55a3f211b9fcedc3ab0bae0f',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'b9db514910c68fd7297a5e3d854fb99997448623',
+            'reference' => 'cf44bbfdebf3be2b55a3f211b9fcedc3ab0bae0f',
             'dev_requirement' => false,
         ),
         'paragonie/constant_time_encoding' => array(
@@ -38,12 +38,12 @@
             'dev_requirement' => false,
         ),
         'php-amqplib/php-amqplib' => array(
-            'pretty_version' => 'v3.5.1',
-            'version' => '3.5.1.0',
+            'pretty_version' => 'v3.5.2',
+            'version' => '3.5.2.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../php-amqplib/php-amqplib',
             'aliases' => array(),
-            'reference' => '2c565476269889544e020d76da0cdf3471675b52',
+            'reference' => '703eef998946f4972e630c3e3d827f7cf020fe68',
             'dev_requirement' => false,
         ),
         'phpseclib/phpseclib' => array(
@@ -58,7 +58,7 @@
         'videlalvaro/php-amqplib' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => 'v3.5.1',
+                0 => 'v3.5.2',
             ),
         ),
     ),
