@@ -8,7 +8,7 @@ $connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin'
 $channel = $connection->channel();
 
 #Declaring the queue with the associated marker
-$channel->queue_declare('MS4', false, false, false, false);
+$channel->queue_declare('MILESTONE 2', false, false, false, false);
 
 #Passive message to signify that the machine is listening for incoming connections
 echo " [*] Waiting for messages. To exit press CTRL+C\n";
@@ -19,7 +19,7 @@ $callback = function ($msg) {
 };
 
 #Calling the function when the message is consumed from the queue
-$channel->basic_consume('MS4', '', false, true, false, false, $callback);
+$channel->basic_consume('MILESTONE 2', '', false, true, false, false, $callback);
 
 #Loop to keep the connection alive and listening until the user exits 
 while ($channel->is_open()) {
