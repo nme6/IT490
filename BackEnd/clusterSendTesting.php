@@ -5,7 +5,7 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 $connection = null;
-$ips = array('192.168.191.111', '192.168.191.67');
+$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 //$ips = array('192.168.191.67');
 foreach ($ips as $ip) {
     try {

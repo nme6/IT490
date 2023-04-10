@@ -8,7 +8,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 // Create a connection to RabbitMQ
 //$connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
 $connection = null;
-$ips = array('192.168.191.111', '192.168.191.67');
+$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 
 foreach ($ips as $ip) {
     try {
