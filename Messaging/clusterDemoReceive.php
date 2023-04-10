@@ -4,7 +4,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 $connection = null;
-$ips = array('192.168.191.111', '192.168.191.67');
+$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 
 foreach ($ips as $ip) {
     try {
@@ -39,7 +39,7 @@ while (true) {
             $channel->wait();
         }
     } catch (ErrorException $e) {
-        // Handle the ErrorException error
+        // Handle Error
         echo "Caught ErrorException: " . $e->getMessage();
     } catch (PhpAmqpLib\Exception\AMQPConnectionClosedException $e) {
         // Handle the AMQPConnectionClosedException error
@@ -57,7 +57,7 @@ while (true) {
             die("Could not connect to any RabbitMQ instance.");
         }
         $channel = $connection->channel();
-        $channel->queue_declare('MILESTONE 2', false, true, false, false, ['x-ha-policy'=>'all']);
+        $channel->queue_declare('MS4', false, true, false, false, ['x-ha-policy'=>'all']);
     }
 }
 

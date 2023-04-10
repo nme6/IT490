@@ -17,11 +17,11 @@ $firstname = 'Boximilian';
 $lastname = 'Aacobs';
 
 // Create a connection to RabbitMQ
-$connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
+$connection = new AMQPStreamConnection('192.168.191.67', 5672, 'admin', 'admin');
 $channel = $connection->channel();
 
 // Declare a queue for sending messages
-$channel->queue_declare('FE2BE', false, false, false, false);
+$channel->queue_declare('regFE2BE', false, false, false, false);
 
 // Publish the message to the queue
 $messageBody = json_encode
@@ -40,7 +40,7 @@ $messageBody = json_encode
 $message = new AMQPMessage($messageBody);
 
 // Publish the message to the queue
-$channel->basic_publish($message, '', 'FE2BE');
+$channel->basic_publish($message, '', 'regFE2BE');
 
 //Echo Msg to console
 echo "-={[Front-end] Sent message to the Back-end!}=-\n$messageBody\n";

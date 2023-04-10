@@ -22,7 +22,7 @@ if (!$connection) {
 
 $channel = $connection->channel();
 
-$channel->queue_declare('MS4', false, true, false, false, ['x-ha-policy'=>'all']);
+//$channel->queue_declare('MILESTONE 2', false, true, false, false);
 
 echo " [*] Waiting for messages. To exit press CTRL+C\n";
 
@@ -34,7 +34,7 @@ $callback = function ($msg) {
 
 while (true) {
     try {
-        $channel->basic_consume('MS4', '', false, true, false, false, $callback);
+        $channel->basic_consume('MILESTONE 2', '', false, true, false, false, $callback);
         while (count($channel->callbacks)) {
             $channel->wait();
         }
@@ -57,7 +57,7 @@ while (true) {
             die("Could not connect to any RabbitMQ instance.");
         }
         $channel = $connection->channel();
-        $channel->queue_declare('MILESTONE 2', false, true, false, false, ['x-ha-policy'=>'all']);
+        //$channel->queue_declare('MILESTONE 2', false, true, false, false);
     }
 }
 
