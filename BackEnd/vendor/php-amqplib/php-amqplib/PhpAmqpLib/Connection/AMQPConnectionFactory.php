@@ -73,7 +73,8 @@ class AMQPConnectionFactory
                 $config->isKeepalive(),
                 $config->getWriteTimeout(),
                 $config->getHeartbeat(),
-                $config->getChannelRPCTimeout()
+                $config->getChannelRPCTimeout(),
+                $config
             );
         }
 
@@ -100,6 +101,7 @@ class AMQPConnectionFactory
             'verify_peer_name' => $config->getSslVerifyName(),
             'passphrase' => $config->getSslPassPhrase(),
             'ciphers' => $config->getSslCiphers(),
+            'security_level' => $config->getSslSecurityLevel()
         ], static function ($value) {
             return null !== $value;
         });
