@@ -5,6 +5,7 @@
 		"startRMQ": "sudo systemctl start rabbitmq-server",
 		"stopRMQ": "sudo systemctl stop rabbitmq-server",
 		"statusRMQ": "cd ~/IT490/IT490/Messaging && ./remoteStart.sh",
+		"ping": "cd ~/IT490/IT490/Messaging && ./easyPing.sh",
 		
 		"t2": "#==========================[ Remote Code Scripts ]=================================#",
 		"checkFE": "ssh neil@192.168.191.215 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",

@@ -25,7 +25,7 @@ $channel = $connection->channel();
 
 $channel->queue_declare('MS4', false, true, false, false, ['x-ha-policy' => 'all']);
 
-$msg = new AMQPMessage("Hello World from Ellis [BackEnd]");
+$msg = new AMQPMessage("Hello World from Maximilian [BackEnd]");
 $channel->basic_publish($msg, '', 'MS4');
 
 echo " [x] Sent Hello World\n";
