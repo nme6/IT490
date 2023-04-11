@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PokÃ©Hub</title>
+  <title>PokéHub Test</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
   <link href="style.css" rel="stylesheet" type="text/css" />
@@ -116,9 +116,9 @@
 
 	// Define the callback function to process messages from the queue
 	$callbackReceive = function ($messageReceive) {
-	echo "Received message from Back-end: " . $message->body . "\n";
+	echo "Received message from Back-end: " . $messageReceive->body . "\n";
 
-	$data = json_decode($message->getBody(), true);
+	$data = json_decode($messageReceive->getBody(), true);
 	
 	$isValid = $data['isValid'];
 	$userExists = $data['userExists'];
@@ -140,13 +140,18 @@
 
                 if ($userExists == false){
 			echo "\nSuccessfully Registered!\n";
-
+			
 			//TODO for Neil: Redirects Page
+			die(header("Location:home.php"));
+			echo "\nSuccesfully registered! Congrats!\n";
 
                 } else {
 			echo "\nUsername / Email is already taken!\n";
 
 			//TODO for Neil: Redirects Page
+			//REDIRECTS TECHNICALLY WORK!!!!
+			//echo "<script>alert('Oopsie, you made a mistake!');</script>";
+			//echo "<script>location.href='register3.php';</script>";
                 }
         }
 
@@ -158,7 +163,8 @@
 
 	// Keep consuming messages until the channel is closed
 	while ($channelReceive->is_open()) {
-    		$channelReceive->wait();
+		$channelReceive->wait();
+		break;
 	}
 
 	// Close the connection
