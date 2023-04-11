@@ -4,44 +4,44 @@ php --version
 
 
 # =================REGISTRATION STEP 2================= #
-if pgrep -f "regStep2.php" > /dev/null;
+if pgrep -f "regStep2-MS4.php" > /dev/null;
 then
-	echo "File [regStep2] is running"
+	echo "File [regStep2-MS4] is running"
 else
-	echo "File [regStep2] is not running, starting it now"
+	echo "File [regStep2-MS4] is not running, starting it now"
 	gnome-terminal -- php regStep2.php
 	#./regStep2.sh
 fi
 
 
 # =================REGISTRATION STEP 4================= #
-if pgrep -f "regStep4.php" > /dev/null;
+if pgrep -f "regStep4-MS4.php" > /dev/null;
 then
-        echo "File [regStep4] is running"
+        echo "File [regStep4-MS4] is running"
 else
-        echo "File [regStep4] is not running, starting it now"
+        echo "File [regStep4-MS4] is not running, starting it now"
         gnome-terminal -- php regStep4.php
         #./regStep4.sh
 fi
 
 
 # =================LOGIN STEP 2================= #
-if pgrep -f "logStep2.php" > /dev/null;
+if pgrep -f "logStep2-MS4.php" > /dev/null;
 then
-        echo "File [logStep2] is running"
+        echo "File [logStep2-MS4] is running"
 else
-        echo "File [logStep2] is not running, starting it now"
+        echo "File [logStep2-MS4] is not running, starting it now"
         gnome-terminal -- php logStep2.php
         #./logStep2.sh
 fi
 
 
 # =================LOGIN STEP 4================= #
-if pgrep -f "logStep4.php" > /dev/null;
+if pgrep -f "logStep4-MS4.php" > /dev/null;
 then
-        echo "File [logStep4] is running"
+        echo "File [logStep4-MS4] is running"
 else
-        echo "File [logStep4] is not running, starting it now"
+        echo "File [logStep4-MS4] is not running, starting it now"
         gnome-terminal -- php logStep4.php
         #./logStep4.sh
 fi

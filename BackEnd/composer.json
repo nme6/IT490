@@ -2,8 +2,13 @@
 	"scripts": {
 		"test": "php --version",
 		
-		
+		"startRMQ": "sudo systemctl start rabbitmq-server",
 
+		"stopRMQ": "sudo systemctl stop rabbitmq-server",
+
+		"statusRMQ": "sudo systemctl status rabbitmq-server",
+
+		
 		"CheckRMQ": "ssh maximilian@192.168.191.111 'cd ~/IT490/IT490/Messaging && ./remoteStart.sh'",
 		"CheckApache2": "ssh neil@192.168.191.215 'cd ~/IT490/IT490/FrontEnd && ./remoteStart.sh'",
 		"CheckDatabase": "ssh daniel@192.168.191.240 'cd ~/IT490/IT490/Database && ./remoteStart.sh'",
