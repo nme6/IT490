@@ -91,7 +91,7 @@ $callback = function ($message) use ($channel) {
 
     $userStatusChannel = $userStatusConnection->channel();
     //$userStatusChannel->queue_declare('logBE2FE', false, false, false, false);
-    $channel->queue_declare('logBE2FE', false, false, false, false, ['x-ha-policy'=>'all']);
+    $userStatusChannel->queue_declare('logBE2FE', false, false, false, false, ['x-ha-policy'=>'all']);
     $userStatusMessage = new AMQPMessage($authBody);
     $userStatusChannel->basic_publish($userStatusMessage, '', 'logBE2FE');
     $userStatusChannel->close();
