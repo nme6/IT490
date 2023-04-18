@@ -9,7 +9,7 @@ then
 	echo "File [regStep2-MS4] is running"
 else
 	echo "File [regStep2-MS4] is not running, starting it now"
-	gnome-terminal -- php regStep2.php
+	gnome-terminal -- php regStep2-MS4.php
 	#./regStep2.sh
 fi
 
@@ -20,7 +20,7 @@ then
         echo "File [regStep4-MS4] is running"
 else
         echo "File [regStep4-MS4] is not running, starting it now"
-        gnome-terminal -- php regStep4.php
+        gnome-terminal -- php regStep4-MS4.php
         #./regStep4.sh
 fi
 
@@ -31,7 +31,7 @@ then
         echo "File [logStep2-MS4] is running"
 else
         echo "File [logStep2-MS4] is not running, starting it now"
-        gnome-terminal -- php logStep2.php
+        gnome-terminal -- php logStep2-MS4.php
         #./logStep2.sh
 fi
 
@@ -42,7 +42,7 @@ then
         echo "File [logStep4-MS4] is running"
 else
         echo "File [logStep4-MS4] is not running, starting it now"
-        gnome-terminal -- php logStep4.php
+        gnome-terminal -- php logStep4-MS4.php
         #./logStep4.sh
 fi
 

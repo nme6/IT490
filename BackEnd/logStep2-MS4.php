@@ -101,7 +101,7 @@ $callback = function ($message) use ($channel) {
 
 
 	$errorConnection = null;
-	$ips = array('192.168.191.111', '192.168.191.67');
+	$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 	foreach ($ips as $ip) {
     		try {
         		$errorConnection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
@@ -152,7 +152,7 @@ $callback = function ($message) use ($channel) {
 
 
         $successConnection = null;
-        $ips = array('192.168.191.111', '192.168.191.67');
+        $ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
         //global $actual_ip;
         //$actual_ip = null;
         foreach ($ips as $ip) {
