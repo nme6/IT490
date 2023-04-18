@@ -23,7 +23,7 @@ if (!$connection) {
 
 $channel = $connection->channel();
 
-$channel->queue_declare('MS4', false, true, false, false, ['x-ha-policy' => 'all']);
+$channel->queue_declare('MS4', false, false, false, false, ['x-ha-policy' => 'all']);
 
 $msg = new AMQPMessage("Hello World from Maximilian [BackEnd]");
 $channel->basic_publish($msg, '', 'MS4');
