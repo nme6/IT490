@@ -109,4 +109,6 @@ while (true) {
         $channel->queue_declare('regDB2BE', false, false, false, false, ['x-ha-policy'=>'all']);
     }
 }
-
+$channel->close();
+$connection->close();
+?>
