@@ -22,11 +22,17 @@ while ($poke_int != -1) {
 
 		fwrite($file, ucfirst($response['name'] . "\n"));
 
+		//teting writing more information about the pokemon
+		
+		//fwrite($file, ucfirst($response['abilities'][1] . "\n"));
+
+
 		fclose($file);
 	
 
 		echo ucfirst($response['name'] . "\n");
-	}
+		//echo ucfirst($response['abilities'][1] . "\n");
+	}	
 
 }
 #$errors = $response['response']['errors'];

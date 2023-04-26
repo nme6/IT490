@@ -1,4 +1,3 @@
-555: Darmanitan-standard
 1: Bulbasaur
 2: Ivysaur
 3: Venusaur
@@ -6,5 +5,12 @@
 5: Charmeleon
 6: Charizard
 7: Squirtle
+87: Dewgong
+999: Gimmighoul
+87: Dewgong
+76: Golem
+4: Charmander
+5: Charmeleon
+6: Charizard
+7: Squirtle
 8: Wartortle
-9: Blastoise
