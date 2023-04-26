@@ -7,6 +7,27 @@ while ($choice != 'exit') {
 	$choice = readline('Please enter what you are looking for: ');
 	//Check for when the user wants to check the evolution chains
 	//NOTE: As of 4/25/23 the number associated is the evolution chain grouping number
+	
+	//This block checks the user input to give the user either the pokedex ID number for the pokemon they enter or the associated name with the ID number they enter
+	
+	if ($choice == 'pokedex entry') {
+		$user_input = readline('Enter the pokemon number or name: ');
+
+		if (is_numeric($user_input)) {
+			$result = $api->pokemon($user_input);
+			$decoded_result = json_decode($result, true);
+			echo "Name: " . $decoded_result['name'] . "\n";
+			}
+		else {
+			$result = $api->pokemon($user_input);
+			$decoded_result = json_decode($result, true);
+			echo "Number: " . $decoded_result['id'] . "\n";
+		}
+					
+		
+	}
+
+
 	if ($choice == 'evolution chain') {
 		$user_input = (int)readline('Enter pokemon number: ');
 
