@@ -1,16 +1,5 @@
-1: Bulbasaur
-2: Ivysaur
-3: Venusaur
-4: Charmander
-5: Charmeleon
-6: Charizard
-7: Squirtle
-87: Dewgong
-999: Gimmighoul
-87: Dewgong
-76: Golem
-4: Charmander
-5: Charmeleon
-6: Charizard
-7: Squirtle
-8: Wartortle
+charmander is number: 4 in the pokedex 
+6 is charizard in the pokedex 
+4 is charmander in the pokedex 
+988 is slither-wing in the pokedex 
+caterpie is number: 10 in the pokedex 

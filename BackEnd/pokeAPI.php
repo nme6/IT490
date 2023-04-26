@@ -4,6 +4,7 @@ use PokePHP\PokeApi;
 $api = new PokeApi;
 $choice = null;
 while ($choice != 'exit') {
+	$output = "";
 	$choice = readline('Please enter what you are looking for: ');
 	//Check for when the user wants to check the evolution chains
 	//NOTE: As of 4/25/23 the number associated is the evolution chain grouping number
@@ -16,18 +17,22 @@ while ($choice != 'exit') {
 		if (is_numeric($user_input)) {
 			$result = $api->pokemon($user_input);
 			$decoded_result = json_decode($result, true);
-			echo "Name: " . $decoded_result['name'] . "\n";
+			//echo "Name: " . $decoded_result['name'] . "\n";
+			$output = $user_input . " is " . $decoded_result['name'] . " in the pokedex \n";
+			echo $output;
 			}
 		else {
 			$result = $api->pokemon($user_input);
 			$decoded_result = json_decode($result, true);
-			echo "Number: " . $decoded_result['id'] . "\n";
+			//echo "Number: " . $decoded_result['id'] . "\n";
+			$output = $user_input . " is number " . $decoded_result['id'] . " in the pokedex \n";
+			echo $output;
 		}
 					
 		
 	}
 
-
+	#IMPORTANT: need to find a way to store these all in one variable
 	if ($choice == 'evolution chain') {
 		$user_input = (int)readline('Enter pokemon number: ');
 
@@ -94,6 +99,10 @@ while ($choice != 'exit') {
 			echo $type['type']['name'] . "\n";
 		}
 	}
+	$file = fopen('APIResponses.txt', 'a');
+	fwrite($file, $output);
+	fclose($file);
+	
 }
 
 ?>
