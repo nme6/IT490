@@ -3,3 +3,268 @@ charmander is number: 4 in the pokedex
 4 is charmander in the pokedex 
 988 is slither-wing in the pokedex 
 caterpie is number: 10 in the pokedex 
+900 is kleavor in the pokedex 
+arceus is number 493 in the pokedex 
+Evolution Chain:
+charmander
+charmeleon
+charizard
+Evolution Chain:
+bulbasaur
+ivysaur
+venusaur
+Evolution Chain:
+squirtle
+wartortle
+blastoise
+Type name: ghost
+Damage relations: 
+double_damage_from: 
+ghost
+dark
+double_damage_to: 
+ghost
+psychic
+half_damage_from: 
+poison
+bug
+half_damage_to: 
+dark
+no_damage_from: 
+normal
+fighting
+no_damage_to: 
+normal
+Pokemon name: caterpie
+Types: 
+bug
+Pokemon name: charizard
+Types: 
+fire
+flying
+Type name: ghost
+Damage relations: 
+double_damage_from: 
+ghost
+dark
+double_damage_to: 
+ghost
+psychic
+half_damage_from: 
+poison
+bug
+half_damage_to: 
+dark
+no_damage_from: 
+normal
+fighting
+no_damage_to: 
+normal
+Type name: ghost
+Damage relations: 
+double_damage_from: 
+ghost
+dark
+double_damage_to: 
+ghost
+psychic
+half_damage_from: 
+poison
+bug
+half_damage_to: 
+dark
+no_damage_from: 
+normal
+fighting
+no_damage_to: 
+normal
+Type name: fire
+Damage relations: 
+double_damage_from: 
+ground
+rock
+water
+double_damage_to: 
+bug
+steel
+grass
+ice
+half_damage_from: 
+bug
+steel
+fire
+grass
+ice
+fairy
+half_damage_to: 
+rock
+fire
+water
+dragon
+no_damage_from: 
+no_damage_to: 
+Type name: water
+Damage relations: 
+double_damage_from: 
+grass
+electric
+double_damage_to: 
+ground
+rock
+fire
+half_damage_from: 
+steel
+fire
+water
+ice
+half_damage_to: 
+water
+grass
+dragon
+no_damage_from: 
+no_damage_to: 
+Type name: fire
+Damage relations: 
+double_damage_from: 
+ground
+rock
+water
+double_damage_to: 
+bug
+steel
+grass
+ice
+half_damage_from: 
+bug
+steel
+fire
+grass
+ice
+fairy
+half_damage_to: 
+rock
+fire
+water
+dragon
+no_damage_from: 
+no_damage_to: 
+Type name: water
+Damage relations: 
+double_damage_from: 
+grass
+electric
+double_damage_to: 
+ground
+rock
+fire
+half_damage_from: 
+steel
+fire
+water
+ice
+half_damage_to: 
+water
+grass
+dragon
+no_damage_from: 
+no_damage_to: 
+Type name: ghost
+Damage relations: 
+double_damage_from: 
+ghost
+dark
+double_damage_to: 
+ghost
+psychic
+half_damage_from: 
+poison
+bug
+half_damage_to: 
+dark
+no_damage_from: 
+normal
+fighting
+no_damage_to: 
+normal
+Type name: fire
+Damage relations: 
+double_damage_from: 
+ground
+rock
+water
+double_damage_to: 
+bug
+steel
+grass
+ice
+half_damage_from: 
+bug
+steel
+fire
+grass
+ice
+fairy
+half_damage_to: 
+rock
+fire
+water
+dragon
+no_damage_from: 
+no_damage_to: 
+Type name: water
+Damage relations: 
+double_damage_from: 
+grass
+electric
+double_damage_to: 
+ground
+rock
+fire
+half_damage_from: 
+steel
+fire
+water
+ice
+half_damage_to: 
+water
+grass
+dragon
+no_damage_from: 
+no_damage_to: 
+Type name: ghost
+Damage relations: 
+double_damage_from: 
+ghost
+dark
+double_damage_to: 
+ghost
+psychic
+half_damage_from: 
+poison
+bug
+half_damage_to: 
+dark
+no_damage_from: 
+normal
+fighting
+no_damage_to: 
+normal
+Pokemon name: charizard
+Types: 
+fire
+flying
+Pokemon name: squirtle
+Types: 
+water
+Pokemon name: mudkip
+Types: 
+water
+4 is charmander in the pokedex 
+charizard is number 6 in the pokedex 
+Evolution Chain:
+pidgey
+pidgeotto
+pidgeot
+Evolution Chain:
+rattata
+raticate
