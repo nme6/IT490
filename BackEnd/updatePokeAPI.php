@@ -40,7 +40,7 @@ $callback = function ($message) use ($channel) {
 	$data = json_decode($message->getBody(), true);
 	
 	$choice = $data['choice'];
-	$exists = $data['pokemon_exists'];
+	$exists = $data['exists'];
 	$user_input = $data['name'];
 	
 	//while ($choice != 'exit') {
@@ -51,6 +51,7 @@ $callback = function ($message) use ($channel) {
 
 			//Check for when user wants to check specific pokemon's typing
 			if ($choice == 'pokemon type') {
+				
 				//$user_input = readline('Enter a Pokemon name: ');
 				$result = $api->pokemon($user_input);
 				$decoded_result = json_decode($result, true);
@@ -69,10 +70,65 @@ $callback = function ($message) use ($channel) {
 					[
 						'pokemon_name' => $user_input,
 						'types' => $output,
-						'pokemon_exists' => $exists
+						'exists' => $exists
 					]
 				);
+			}
+			
+			if ($choice = 'damage type') {
 				
+				$result = $api->pokemonType($user_input);
+				$decoded_result = json_decode($result, true);
+
+				foreach ($decoded_result['damage_relations'] as $key => $value) {
+
+					array_push($output_array, $key . ": ");
+				//go through each of the relational damages and echo the name of the types	
+			    		foreach ($value as $name) {
+
+						array_push($output_array, $name['name']);
+						
+			    		}	
+				}
+				$double_damage_from = [];
+				$double_damage_to = [];
+				$half_damage_from = [];
+				$half_damage_to = [];
+				$no_damage_from = [];
+				$no_damage_to = [];
+
+				$category = '';
+				
+				foreach ($output_array as $item) {
+					if (strpos($item, ':') !== false) {
+						$category = trim(str_replace(':', '', $item));
+					} else {
+						${$category}[] = trim($item);
+					}
+				}
+				$double_damage_from_output = implode(', ', $double_damage_from) . "\n";
+				$double_damage_to_output = implode(', ', $double_damage_to) . "\n";
+				$half_damage_from_output = implode(', ', $half_damage_from) . "\n";
+				$half_damage_to_output = implode(', ', $half_damage_to) . "\n";
+				$no_damage_from_output = implode(', ', $no_damage_from) . "\n";
+				$no_damage_to_output = implode(', ', $no_damage_to) . "\n";
+				
+				$pokemonTypesMessageBody = json_encode
+				(
+					[
+						'damage_type' => $user_input,
+						'double_from' => $double_damage_from_output,
+						'double_to' => $double_damage_to_output,
+						'half_from' => $half_damage_from_output,
+						'half_to' => $half_damage_to_output,
+						'no_from' => $no_damage_from_output,
+						'no_to' => $no_damage_to_output,
+						'exists' => $exists
+					]
+				);
+			}	
+			
+			
 				$pokemonTypesInsertConnection = null;
 				$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 				foreach ($ips as $ip) {
@@ -101,24 +157,47 @@ $callback = function ($message) use ($channel) {
 				
 
 				}
-			} else {
+			else {
 			
-			
-			$pokemon_types = $data['types'];
-			echo $pokemon_types;
-			echo $exists;
-			
-			$pokemonMessageBody = json_encode
-			(
-				[
-					'pokemon_name' => $user_input,
-					'types' => $pokemon_types
-				]
-			);
+				if ($choice == 'type') {
+					$pokemon_types = $data['types'];
+					echo $pokemon_types;
+					echo $exists;
+					
+					$pokemonMessageBody = json_encode
+					(
+						[
+							'pokemon_name' => $user_input,
+							'types' => $pokemon_types
+						]
+					);
+				} elseif ($choice == 'damage type') {
+					$double_damage_from = $data['double_from'];
+					$double_damage_to = $data['double_to'];
+					$half_damage_from = $data['half_from'];
+					$half_damage_to = $data['half_to'];
+					$no_damage_from = $data['no_from'];
+					$no_damage_to = $data['no_to'];
+					
+					
+					$pokemonMessageBody = json_encode
+					(
+						[
+							'damage_type' => $user_input,
+							'double_from' => $double_damage_from,
+							'double_to' => $double_damage_to,
+							'half_from' => $half_damage_from,
+							'half_to' => $half_damage_to,
+							'no_from' => $no_damage_from,
+							'no_to' => $no_damage_to
+						]
+					);
+				}
 			
 			//now send to the frontend
 			
 		}
+		
 	};	
 //};
 while (true) {

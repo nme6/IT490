@@ -53,6 +53,21 @@ while ($choice != 'exit') {
 				]
 			);
 			
+		}
+	   		
+	   	if ($choice == 'damage type') {
+	   		$user_input = readline('Enter a damage type: ');
+	   		
+	   		$pokemonTypesMessageBody = json_encode
+	   		(
+	   			[
+	   				'choice' => $choice,
+	   				'damage_type' => $user_input
+	   			]
+	   		);
+	   		
+	   	}
+	   	
 			$pokemonTypesConnection = null;
 			$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 			foreach ($ips as $ip) {
@@ -68,7 +83,6 @@ while ($choice != 'exit') {
 	   		if (!$pokemonTypesConnection) {
 	   			die("could not connect to any RabbitMQ instance");
 	   		}
-			
 			$typeChannel = $pokemonTypesConnection->channel();
 			$typeChannel->queue_declare('pokeBE2DB', false, false, false, false, ['x-ha-policy'=>'all']);
 	    		$pokemonTypesMessage = new AMQPMessage($pokemonTypesMessageBody);
@@ -81,9 +95,6 @@ while ($choice != 'exit') {
 			
 
 		}
-
-		
-	}
 
 $channel->close();
 $connection->close();

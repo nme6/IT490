@@ -154,33 +154,15 @@ $choice = null;
 		        		${$category}[] = trim($item);
 				}
 			}
-			$double_damage_from_output = "double_damage_from: " . implode(', ', $double_damage_from) . "\n";
+			$double_damage_from_output = "Double Damage From: " . implode(', ', $double_damage_from) . "\n";
 			$double_damage_to_output = "double_damage_to: " . implode(', ', $double_damage_to) . "\n";
 			$half_damage_from_output = "half_damage_from: " . implode(', ', $half_damage_from) . "\n";
 			$half_damage_to_output = "half_damage_to: " . implode(', ', $half_damage_to) . "\n";
 			$no_damage_from_output = "no_damage_from: " . implode(', ', $no_damage_from) . "\n";
 			$no_damage_to_output = "no_damage_to: " . implode(', ', $no_damage_to) . "\n";
-			fwrite($damage_file, $double_damage_from_output);
-			fwrite($damage_file, $double_damage_to_output);
-			fwrite($damage_file, $half_damage_from_output);
-			fwrite($damage_file, $half_damage_to_output);
-			fwrite($damage_file, $no_damage_from_output);
-			fwrite($damage_file, $no_damage_to_output);
-			//echo "double_damage_from: " . implode(', ', $double_damage_from) . "\n";
-			//echo "double_damage_to: " . implode(', ', $double_damage_to) . "\n";
-			//echo "half_damage_from: " . implode(', ', $half_damage_from) . "\n";
-			//echo "half_damage_to: " . implode(', ', $half_damage_to) . "\n";
-			//echo "no_damage_from: " . implode(', ', $no_damage_from) . "\n";
-			//echo "no_damage_to: " . implode(', ', $no_damage_to) . "\n";
-			
-			//print_r($output_array); 
-			
-			//print_r($output);
-			//print(gettype($output));
+			echo gettype($double_damage_from_output) . "\n";
+			echo $double_damage_from_output . "\n";
 
-			//fwrite($damage_file, $output);
-			fwrite($damage_file, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- \n");
-			fclose($damage_file);
 		}
 
 		//Check for when user wants to check specific pokemon's typing
