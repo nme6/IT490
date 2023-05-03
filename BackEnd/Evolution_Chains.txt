@@ -12,3 +12,8 @@ pidgeot
 Evolution Chain:
 rattata
 raticate
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+Evolution Chain:
+charmander
+charmeleon
+charizard

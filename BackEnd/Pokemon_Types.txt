@@ -11,3 +11,7 @@ water
 Pokemon name: mudkip
 Types: 
 water
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+Pokemon name: darkrai
+Types: 
+dark

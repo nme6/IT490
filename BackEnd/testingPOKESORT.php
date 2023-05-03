@@ -4,8 +4,7 @@ use PokePHP\PokeApi;
 $api = new PokeApi;
 $choice = null;
 while ($choice != 'exit') {
-	$output = "";
-	$output_array = [];
+	$output = [];
 	$choice = readline('Please enter what you are looking for: ');
 	//Check for when the user wants to check the evolution chains
 	//NOTE: As of 4/25/23 the number associated is the evolution chain grouping number
@@ -93,44 +92,51 @@ while ($choice != 'exit') {
 		foreach ($decoded_result['damage_relations'] as $key => $value) {
 			echo $key . ": \n";
 			$output .= $key . ": \n";
-			//might need to save key to another variable
-			array_push($output_array, $key . ": ");
+		
 		//go through each of the relational damages and echo the name of the types	
 	    		foreach ($value as $name) {
 				echo $name['name'] . "\n";
 				$output .= $name['name'] . "\n";
-				array_push($output_array, $name['name']);
 				
 	    		}	
 		}
-		$double_damage_from = [];
-		$double_damage_to = [];
-		$half_damage_from = [];
-		$half_damage_to = [];
-		$no_damage_from = [];
-		$no_damage_to = [];
+		$double_damage_from = array();
+		$double_damage_to = array();
+		$half_damage_from = array();
+		$half_damage_to = array();
+		$no_damage_from = array();
+		$no_damage_to = array();
 
 		$category = '';
-		
-		foreach ($output_array as $item) {
-        		if (strpos($item, ':') !== false) {
-                		$category = trim(str_replace(':', '', $item));
-        		} else {
-                		${$category}[] = trim($item);
-        		}
-		}
 
-		echo "double_damage_from: " . implode(', ', $double_damage_from) . "\n";
-		echo "double_damage_to: " . implode(', ', $double_damage_to) . "\n";
-		echo "half_damage_from: " . implode(', ', $half_damage_from) . "\n";
-		echo "half_damage_to: " . implode(', ', $half_damage_to) . "\n";
-		echo "no_damage_from: " . implode(', ', $no_damage_from) . "\n";
-		echo "no_damage_to: " . implode(', ', $no_damage_to) . "\n";
-		
-		//print_r($output_array); 
-		
-		//print_r($output);
-		//print(gettype($output));
+		foreach ($decoded_result['damage_relations'] as $key => $value) {
+		    echo $key . ": \n";
+
+		    foreach ($value as $name) {
+			echo $name['name'] . "\n";
+
+			switch ($key) {
+			    case 'double_damage_from':
+				$double_damage_from[] = $name['name'];
+				break;
+			    case 'double_damage_to':
+				$double_damage_to[] = $name['name'];
+				break;
+			    case 'half_damage_from':
+				$half_damage_from[] = $name['name'];
+				break;
+			    case 'half_damage_to':
+				$half_damage_to[] = $name['name'];
+				break;
+			    case 'no_damage_from':
+				$no_damage_from[] = $name['name'];
+				break;
+			    case 'no_damage_to':
+				$no_damage_to[] = $name['name'];
+				break;
+			}
+		    }
+		}
 
 		fwrite($damage_file, $output);
 		fwrite($damage_file, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- \n");
