@@ -791,3 +791,118 @@ water
 dragon
 no_damage_from: 
 no_damage_to: 
+Type name: fire
+Damage relations: 
+double_damage_from: 
+ground
+rock
+water
+double_damage_to: 
+bug
+steel
+grass
+ice
+half_damage_from: 
+bug
+steel
+fire
+grass
+ice
+fairy
+half_damage_to: 
+rock
+fire
+water
+dragon
+no_damage_from: 
+no_damage_to: 
+Type name: water
+Damage relations: 
+double_damage_from: 
+grass
+electric
+double_damage_to: 
+ground
+rock
+fire
+half_damage_from: 
+steel
+fire
+water
+ice
+half_damage_to: 
+water
+grass
+dragon
+no_damage_from: 
+no_damage_to: 
+Type name: water
+Damage relations: 
+double_damage_from: 
+grass
+electric
+double_damage_to: 
+ground
+rock
+fire
+half_damage_from: 
+steel
+fire
+water
+ice
+half_damage_to: 
+water
+grass
+dragon
+no_damage_from: 
+no_damage_to: 
+Type name: fire
+Damage relations: 
+double_damage_from: 
+ground
+rock
+water
+double_damage_to: 
+bug
+steel
+grass
+ice
+half_damage_from: 
+bug
+steel
+fire
+grass
+ice
+fairy
+half_damage_to: 
+rock
+fire
+water
+dragon
+no_damage_from: 
+no_damage_to: 
+Pokemon name: charmeleon
+Types: 
+fire
+Pokemon name: staraptor
+Types: 
+normal
+flying
+Type name: electric
+Damage relations: 
+double_damage_from: 
+ground
+double_damage_to: 
+flying
+water
+half_damage_from: 
+flying
+steel
+electric
+half_damage_to: 
+grass
+electric
+dragon
+no_damage_from: 
+no_damage_to: 
+ground
