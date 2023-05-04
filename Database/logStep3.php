@@ -89,3 +89,4 @@ while (count($channel->callbacks)) {
 // Close the connection
 $channel->close();
 $connection->close();
+
