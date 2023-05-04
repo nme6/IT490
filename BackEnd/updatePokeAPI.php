@@ -68,6 +68,7 @@ $callback = function ($message) use ($channel) {
 				$pokemonTypesMessageBody = json_encode 
 				(
 					[
+						'choice' => $choice,
 						'pokemon_name' => $user_input,
 						'types' => $output,
 						'exists' => $exists
@@ -116,6 +117,7 @@ $callback = function ($message) use ($channel) {
 				$pokemonTypesMessageBody = json_encode
 				(
 					[
+						'choice' => $choice,
 						'damage_type' => $user_input,
 						'double_from' => $double_damage_from_output,
 						'double_to' => $double_damage_to_output,
@@ -166,11 +168,13 @@ $callback = function ($message) use ($channel) {
 						$pokemonMessageBody = json_encode
 						(
 							[
+								'choice' => $choice,
 								'pokemon_name' => $user_input,
 								'types' => $pokemon_types
 							]
 						);
 					} elseif ($choice == 'damage type') {
+						$damage_type =$data['damage_type'];
 						$double_damage_from = $data['double_from'];
 						$double_damage_to = $data['double_to'];
 						$half_damage_from = $data['half_from'];
@@ -178,10 +182,18 @@ $callback = function ($message) use ($channel) {
 						$no_damage_from = $data['no_from'];
 						$no_damage_to = $data['no_to'];
 						
-						
+						echo $damage_type . "\n";
+						echo $double_damage_from . "\n";
+						echo $double_damage_to . "\n";
+						echo $half_damage_from . "\n";
+						echo $half_damage_to . "\n";
+						echo $no_damage_from . "\n";
+						echo $no_damage_to . "\n";
+												
 						$pokemonMessageBody = json_encode
 						(
 							[
+								'choice' => $choice,
 								'damage_type' => $user_input,
 								'double_from' => $double_damage_from,
 								'double_to' => $double_damage_to,
