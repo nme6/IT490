@@ -32,7 +32,7 @@ if (!$connection) {
 $channel = $connection->channel();
 
 $channel->queue_declare('pokeAPIBE2DB', false, false, false, false, ['x-ha-policy'=>'all']);
-
+$channel->queue_declare('pokeDB2BE', false, false, false, false, ['x-ha-policy'=>'all']);
 //$choice = null;
 
 $callback = function ($message) use ($channel) {
@@ -75,7 +75,7 @@ $callback = function ($message) use ($channel) {
 				);
 			}
 			
-			if ($choice = 'damage type') {
+			if ($choice == 'damage type') {
 				
 				$result = $api->pokemonType($user_input);
 				$decoded_result = json_decode($result, true);
@@ -156,47 +156,46 @@ $callback = function ($message) use ($channel) {
 				
 				
 
-				}
-			else {
+				} elseif ($exists) {
 			
-				if ($choice == 'type') {
-					$pokemon_types = $data['types'];
-					echo $pokemon_types;
-					echo $exists;
-					
-					$pokemonMessageBody = json_encode
-					(
-						[
-							'pokemon_name' => $user_input,
-							'types' => $pokemon_types
-						]
-					);
-				} elseif ($choice == 'damage type') {
-					$double_damage_from = $data['double_from'];
-					$double_damage_to = $data['double_to'];
-					$half_damage_from = $data['half_from'];
-					$half_damage_to = $data['half_to'];
-					$no_damage_from = $data['no_from'];
-					$no_damage_to = $data['no_to'];
-					
-					
-					$pokemonMessageBody = json_encode
-					(
-						[
-							'damage_type' => $user_input,
-							'double_from' => $double_damage_from,
-							'double_to' => $double_damage_to,
-							'half_from' => $half_damage_from,
-							'half_to' => $half_damage_to,
-							'no_from' => $no_damage_from,
-							'no_to' => $no_damage_to
-						]
-					);
-				}
-			
-			//now send to the frontend
-			
-		}
+					if ($choice == 'pokemon type') {
+						$pokemon_types = $data['types'];
+						echo $pokemon_types;
+						echo $exists;
+						
+						$pokemonMessageBody = json_encode
+						(
+							[
+								'pokemon_name' => $user_input,
+								'types' => $pokemon_types
+							]
+						);
+					} elseif ($choice == 'damage type') {
+						$double_damage_from = $data['double_from'];
+						$double_damage_to = $data['double_to'];
+						$half_damage_from = $data['half_from'];
+						$half_damage_to = $data['half_to'];
+						$no_damage_from = $data['no_from'];
+						$no_damage_to = $data['no_to'];
+						
+						
+						$pokemonMessageBody = json_encode
+						(
+							[
+								'damage_type' => $user_input,
+								'double_from' => $double_damage_from,
+								'double_to' => $double_damage_to,
+								'half_from' => $half_damage_from,
+								'half_to' => $half_damage_to,
+								'no_from' => $no_damage_from,
+								'no_to' => $no_damage_to
+							]
+						);
+					}
+				
+				//now send to the frontend
+				
+			}
 		
 	};	
 //};

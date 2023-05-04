@@ -37,10 +37,11 @@ $choice = null;
 
 
 while ($choice != 'exit') {
-
+		//change this to a json decode receiving info from the frontend
 		$choice = readline('Please enter what you are looking for: ');
-
+		
 		if ($choice == 'pokemon type') {
+			//change to a json decode for user input from the frontend
 			$user_input = readline('Enter a Pokemon name: ');
 			
 
@@ -84,7 +85,7 @@ while ($choice != 'exit') {
 	   			die("could not connect to any RabbitMQ instance");
 	   		}
 			$typeChannel = $pokemonTypesConnection->channel();
-			$typeChannel->queue_declare('pokeBE2DB', false, false, false, false, ['x-ha-policy'=>'all']);
+			$typeChannel->queue_declare('pokeBE2DB', false, true, false, false, ['x-ha-policy'=>'all']);
 	    		$pokemonTypesMessage = new AMQPMessage($pokemonTypesMessageBody);
 	    		$typeChannel->basic_publish($pokemonTypesMessage, '', 'pokeBE2DB');
 	    		$typeChannel->close();
