@@ -31,8 +31,8 @@ if (!$connection) {
 
 $channel = $connection->channel();
 
-$channel->queue_declare('pokeAPIBE2DB', false, false, false, false, ['x-ha-policy'=>'all']);
-$channel->queue_declare('pokeDB2BE', false, false, false, false, ['x-ha-policy'=>'all']);
+$channel->queue_declare('pokeAPIBE2DB', false, true, false, false, ['x-ha-policy'=>'all']);
+$channel->queue_declare('pokeDB2BE', false, true, false, false, ['x-ha-policy'=>'all']);
 //$choice = null;
 
 $callback = function ($message) use ($channel) {
@@ -148,7 +148,7 @@ $callback = function ($message) use ($channel) {
 		   		};
 				
 				$typeInsertChannel = $pokemonTypesInsertConnection->channel();
-				$typeInsertChannel->queue_declare('pokeAPIBE2DB', false, false, false, false, ['x-ha-policy'=>'all']);
+				$typeInsertChannel->queue_declare('pokeAPIBE2DB', false, true, false, false, ['x-ha-policy'=>'all']);
 		    		$pokemonTypesMessage = new AMQPMessage($pokemonTypesMessageBody);
 		    		$typeInsertChannel->basic_publish($pokemonTypesMessage, '', 'pokeAPIBE2DB');
 		    		$typeInsertChannel->close();
@@ -174,7 +174,7 @@ $callback = function ($message) use ($channel) {
 							]
 						);
 					} elseif ($choice == 'damage type') {
-						$damage_type =$data['damage_type'];
+						$damage_type =$data['name'];
 						$double_damage_from = $data['double_from'];
 						$double_damage_to = $data['double_to'];
 						$half_damage_from = $data['half_from'];
@@ -182,19 +182,19 @@ $callback = function ($message) use ($channel) {
 						$no_damage_from = $data['no_from'];
 						$no_damage_to = $data['no_to'];
 						
-						echo $damage_type . "\n";
-						echo $double_damage_from . "\n";
-						echo $double_damage_to . "\n";
-						echo $half_damage_from . "\n";
-						echo $half_damage_to . "\n";
-						echo $no_damage_from . "\n";
-						echo $no_damage_to . "\n";
+						echo "Damage Type: " . $damage_type . "\n";
+						echo "Double Damage From: " . $double_damage_from . "\n";
+						echo "Double Damage To: " . $double_damage_to . "\n";
+						echo "Half Damage From: " . $half_damage_from . "\n";
+						echo "Half Damage To: " . $half_damage_to . "\n";
+						echo "No Damage From: " . $no_damage_from . "\n";
+						echo "No Damage To: " . $no_damage_to . "\n";
 												
 						$pokemonMessageBody = json_encode
 						(
 							[
 								'choice' => $choice,
-								'damage_type' => $user_input,
+								'name' => $user_input,
 								'double_from' => $double_damage_from,
 								'double_to' => $double_damage_to,
 								'half_from' => $half_damage_from,
@@ -236,7 +236,7 @@ while (true) {
             die("Could not connect to any RabbitMQ instance.");
         }
         $channel = $connection->channel();
-        $channel->queue_declare('pokeDB2BE', false, false, false, false, ['x-ha-policy'=>'all']);
+        $channel->queue_declare('pokeDB2BE', false, true, false, false, ['x-ha-policy'=>'all']);
     }
 }
 $channel->close();

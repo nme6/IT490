@@ -33,16 +33,19 @@ if (!$connection) {
 
 
 $choice = null;
-
-
-
-while ($choice != 'exit') {
+$channel = $connection->channel();
+$channel->queue_declare('pokeFE2BE', false, true, false, false, ['x-ha-policy'=>'all']);
+//while ($choice != 'exit') {
+$callback = function ($message) use ($channel) {
 		//change this to a json decode receiving info from the frontend
-		$choice = readline('Please enter what you are looking for: ');
-		
+		//$choice = readline('Please enter what you are looking for: ');
+		$data = json_decode($message->getBody(), true);
+		$choice = $data['choice'];
+		$user_input = $data['user_input'];
 		if ($choice == 'pokemon type') {
+			
 			//change to a json decode for user input from the frontend
-			$user_input = readline('Enter a Pokemon name: ');
+			//$user_input = readline('Enter a Pokemon name: ');
 			
 
 			
@@ -57,7 +60,8 @@ while ($choice != 'exit') {
 		}
 	   		
 	   	if ($choice == 'damage type') {
-	   		$user_input = readline('Enter a damage type: ');
+	   		//$user_input = readline('Enter a damage type: ');
+	   		
 	   		
 	   		$pokemonTypesMessageBody = json_encode
 	   		(
@@ -95,7 +99,37 @@ while ($choice != 'exit') {
 			
 			
 
-		}
+		};
+		
+		
+while (true) {
+    try {
+        $channel->basic_consume('pokeFE2BE', '', false, true, false, false, $callback);
+        while (count($channel->callbacks)) {
+            $channel->wait();
+        }
+    } catch (ErrorException $e) {
+        // Handle Error
+        echo "Caught ErrorException: " . $e->getMessage();
+    } catch (PhpAmqpLib\Exception\AMQPConnectionClosedException $e) {
+        // Handle the AMQPConnectionClosedException error
+        echo "Caught AMQPConnectionClosedException: " . $e->getMessage() . "\n\n";
+        foreach ($ips as $ip) {
+            try {
+                $connection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
+                echo "Connected to RabbitMQ instance at $ip\n";
+                break;
+            } catch (Exception $e) {
+                continue;
+            }
+        }
+        if (!$connection) {
+            die("Could not connect to any RabbitMQ instance.");
+        }
+        $channel = $connection->channel();
+        $channel->queue_declare('pokeFE2BE', false, true, false, false, ['x-ha-policy'=>'all']);
+    }
+}
 
 $channel->close();
 $connection->close();
