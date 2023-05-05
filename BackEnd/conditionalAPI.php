@@ -74,19 +74,28 @@ $callback = function ($message) use ($channel) {
 	   	if ($choice == 'team build') {
 	   		//take 8 parameters: User ID, Choice, Member1, Member2, Member3, Member4, Member5, Member6	   		
 	   		//add json encoding info here for team builder
-	   		$pokemonTypeMessageBody = json_encode 
+	   		$pokemonTypesMessageBody = json_encode 
 	   		(
 	   			[
-	   				'user_id'= $data['user_id'],
-	   				'choice' = $data['choice'],
-	   				'member_1' = $data['member_1'],
-	   				'member_2' = $data['member_2'],
-	   				'member_3' = $data['member_3'],
-	   				'member_4' = $data['member_4'],
-	   				'member_5' = $data['member_5'],
-	   				'member_6' = $data['member_6']
+	   				'id'=> $data['user_id'],
+	   				'choice' => $data['choice'],
+	   				'member_1' => $data['member_1'],
+	   				'member_2' => $data['member_2'],
+	   				'member_3' => $data['member_3'],
+	   				'member_4' => $data['member_4'],
+	   				'member_5' => $data['member_5'],
+	   				'member_6' => $data['member_6']
 
 	   				
+	   			]
+	   		);
+	   		}
+	   	if ($choice == 'team view') {
+	   		$pokemonTypesMessageBody = json_encode
+	   		(
+	   			[
+	   				'id' => $data['user_id'],
+	   				'choice' => $data['choice']
 	   			]
 	   		);
 	   		}

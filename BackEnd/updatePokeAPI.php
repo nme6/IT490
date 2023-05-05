@@ -50,7 +50,7 @@ $callback = function ($message) use ($channel) {
 	//Establish variables used for conditional statements provided by both Database and Frontend
 	$choice = $data['choice'];
 	$exists = $data['exists'];
-	$user_input = $data['name'];
+	//$user_input = $data['name'];
 	
 	
 		$output = "";
@@ -61,7 +61,7 @@ $callback = function ($message) use ($channel) {
 
 			//Check for when user wants to check specific pokemon's typing
 			if ($choice == 'pokemon type') {
-				
+				$user_input = $data['name'];
 				//Call the API to gain the specified information
 				$result = $api->pokemon($user_input);
 				$decoded_result = json_decode($result, true);
@@ -91,7 +91,7 @@ $callback = function ($message) use ($channel) {
 			}
 			
 			if ($choice == 'damage type') {
-				
+				$user_input = ['name'];
 				$result = $api->pokemonType($user_input);
 				$decoded_result = json_decode($result, true);
 				
@@ -184,11 +184,12 @@ $callback = function ($message) use ($channel) {
 		    		$typeInsertChannel->close();
 		    		$pokemonTypesInsertConnection->close();
 		    		
+		    		
 		    		//Condition now checks if the API response was already stored in the Database	    				
 				} elseif ($exists) {
 			
 					if ($choice == 'pokemon type') {
-					
+						$user_input = ['name'];
 						//Outputs for testing purposes in Backend
 						/*
 						echo $data['types'];
@@ -205,7 +206,7 @@ $callback = function ($message) use ($channel) {
 							]
 						);
 					} elseif ($choice == 'damage type') {
-						
+						$user_input = ['name'];
 						//used to display test results in backend terminal during testing Database calls
 						/*
 						$damage_type =$data['name'];
@@ -241,26 +242,65 @@ $callback = function ($message) use ($channel) {
 						);
 						
 						
-					} elseif ($choice == 'team build') {
-						//THE DATABASE WILL CHECK THE TEAM NUMBER WHEN THEY GO TO SEARCH FOR ONE
-						//NEED TO IMPLEMENT A DATABASE SEARCH FEATURE FOR THE ASSOCIATED TEAM NUMBER
-						$pokemonTypeMessageBody = json_encode 
+					}
+					
+					elseif ($choice == 'team view') {
+						$pokemonTypesMessageBody = json_encode 
+			   			(
+			   				[
+			   					'id'=> $data['id'],
+			   					'choice' => $data['choice'],
+			   					'member_1' => $data['member_1'],
+			   					'member_2' => $data['member_2'],
+			   					'member_3' => $data['member_3'],
+			   					'member_4' => $data['member_4'],
+			   					'member_5' => $data['member_5'],
+			   					'member_6' => $data['member_6']
+
+			   				
+			   				]
+			   			);	
+	   				} elseif ($choice == 'team build') {
+	   					
+	   					$pokemonTypesMessageBody = json_encode
 	   					(
 	   						[
-	   						'user_id'= $data['user_id'],
-	   						'choice' = $data['choice'],
-	   						'member_1' = $data['member_1'],
-	   						'member_2' = $data['member_2'],
-	   						'member_3' = $data['member_3'],
-	   						'member_4' = $data['member_4'],
-	   						'member_5' = $data['member_5'],
-	   						'member_6' = $data['member_6']
+	   							'user_id' => $data['id'],
+	   							'choice' => $data['choice'],
+			   					'member_1' => $data['member_1'],
+			   					'member_2' => $data['member_2'],
+			   					'member_3' => $data['member_3'],
+			   					'member_4' => $data['member_4'],
+			   					'member_5' => $data['member_5'],
+			   					'member_6' => $data['member_6']
+			   				]
+			   			);
+			   			$pokemonTypesInsertConnection = null;
+						$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
+						foreach ($ips as $ip) {
+				    			try {
+								$pokemonTypesInsertConnection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
+								echo "Connected to RabbitMQ instance at $ip\n";
+						    		break;
+				    			} catch (Exception $e) {
+								continue;
+				    			}
+				   		}
+				   		
+				   		if (!$pokemonTypesInsertConnection) {
+				   			die("could not connect to any RabbitMQ instance");
+				   		};
+				   		
+				   		//Establish the connection channel and send the encoded data to the Frontend
+				   		$typeInsertChannel = $pokemonTypesInsertConnection->channel();
+				   		$typeInsertChannel->queue_declare('pokeBE2FE', false, true, false, false, ['x-ha-policy'=>'all']);
+				    		$pokemonTypesMessage = new AMQPMessage($pokemonTypesMessageBody);
+				    		$typeInsertChannel->basic_publish($pokemonTypesMessage, '', 'pokeBE2FE');
+				    		$typeInsertChannel->close();
+				    		$pokemonTypesInsertConnection->close();
+				    		
+		   			} 
 
-	   				
-	   						]
-	   					);
-											
-					}
 						
 					
 					
@@ -288,10 +328,13 @@ $callback = function ($message) use ($channel) {
 		    		$typeInsertChannel->basic_publish($pokemonTypesMessage, '', 'pokeBE2FE');
 		    		$typeInsertChannel->close();
 		    		$pokemonTypesInsertConnection->close();
+		    		
 				
 				
-			}
-		
+						
+	   		
+
+		}
 	};	
 
 //Attempt to recconnect to rabbitmq nodes and re-establish queues if connection is lost
