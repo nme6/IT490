@@ -42,6 +42,7 @@ $callback = function ($message) use ($channel) {
 
     $password = $data['password'];
     $username = $data['username'];
+    $id = $data['id'];
     $hash = $data['hash'];
     $userFound = $data['userFound'];
 
@@ -61,6 +62,7 @@ $callback = function ($message) use ($channel) {
 		    'userAuth' => $userAuth,
 		    'username' => $username,
 		    'isValid' => $isValid,
+		    'id' => $id
 	    ]
     );
 

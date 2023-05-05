@@ -1,4 +1,4 @@
-<?php
+ <?php
 require_once __DIR__ . '/vendor/autoload.php';
 use PokePHP\PokeApi;
 
@@ -132,6 +132,7 @@ $callback = function ($message) use ($channel) {
 			
 			
 				$pokemonTypesInsertConnection = null;
+				//$pokemonTypesFrontConnection = null;
 				$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 				foreach ($ips as $ip) {
 		    			try {
@@ -151,6 +152,12 @@ $callback = function ($message) use ($channel) {
 				$typeInsertChannel->queue_declare('pokeAPIBE2DB', false, true, false, false, ['x-ha-policy'=>'all']);
 		    		$pokemonTypesMessage = new AMQPMessage($pokemonTypesMessageBody);
 		    		$typeInsertChannel->basic_publish($pokemonTypesMessage, '', 'pokeAPIBE2DB');
+
+		    		
+		    		
+		    		$typeInsertChannel->queue_declare('pokeBE2FE', false, true, false, false, ['x-ha-policy'=>'all']);
+		    		$pokemonTypesMessage = new AMQPMessage($pokemonTypesMessageBody);
+		    		$typeInsertChannel->basic_publish($pokemonTypesMessage, '', 'pokeBE2FE');
 		    		$typeInsertChannel->close();
 		    		$pokemonTypesInsertConnection->close();
 		    		
@@ -165,7 +172,7 @@ $callback = function ($message) use ($channel) {
 						echo $pokemon_types;
 						echo $exists;
 						
-						$pokemonMessageBody = json_encode
+						$pokemonTypesMessageBody = json_encode
 						(
 							[
 								'choice' => $choice,
@@ -190,11 +197,11 @@ $callback = function ($message) use ($channel) {
 						echo "No Damage From: " . $no_damage_from . "\n";
 						echo "No Damage To: " . $no_damage_to . "\n";
 												
-						$pokemonMessageBody = json_encode
+						$pokemonTypesMessageBody = json_encode
 						(
 							[
 								'choice' => $choice,
-								'name' => $user_input,
+								'damage_type' => $user_input,
 								'double_from' => $double_damage_from,
 								'double_to' => $double_damage_to,
 								'half_from' => $half_damage_from,
@@ -204,6 +211,32 @@ $callback = function ($message) use ($channel) {
 							]
 						);
 					}
+					
+					
+					
+				$pokemonTypesInsertConnection = null;
+				//$pokemonTypesFrontConnection = null;
+				$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
+				foreach ($ips as $ip) {
+		    			try {
+						$pokemonTypesInsertConnection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
+						echo "Connected to RabbitMQ instance at $ip\n";
+				    		break;
+		    			} catch (Exception $e) {
+						continue;
+		    			}
+		   		}
+		   		
+		   		if (!$pokemonTypesInsertConnection) {
+		   			die("could not connect to any RabbitMQ instance");
+		   		};
+		   		
+		   		$typeInsertChannel = $pokemonTypesInsertConnection->channel();
+		   		$typeInsertChannel->queue_declare('pokeBE2FE', false, true, false, false, ['x-ha-policy'=>'all']);
+		    		$pokemonTypesMessage = new AMQPMessage($pokemonTypesMessageBody);
+		    		$typeInsertChannel->basic_publish($pokemonTypesMessage, '', 'pokeBE2FE');
+		    		$typeInsertChannel->close();
+		    		$pokemonTypesInsertConnection->close();
 				
 				//now send to the frontend
 				
