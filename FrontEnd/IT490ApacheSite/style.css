@@ -17,3 +17,11 @@ p {
 .imageFlipper {
   transform: scaleX(-1);
 }
+
+/*.type-name-fire {
+  background-color: orange !important;
+  font-weight: bold;
+  text-transform: uppercase;
+}*/
+
+

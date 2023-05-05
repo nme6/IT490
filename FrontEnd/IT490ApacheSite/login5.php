@@ -125,7 +125,7 @@
 
 	// Declare the queue
 	//$channelReceive->queue_declare('logBE2FE', false, false, false, false);
-	$channelReceive->queue_declare('regBE2FE', false, false, false, false, ['x-ha-policy'=>'all']);
+	$channelReceive->queue_declare('logBE2FE', false, false, false, false, ['x-ha-policy'=>'all']);
 
 	//echo "-={[FrontEnd Log5] Waiting for Back-end messages. To exit press CTRL+C}=-\n";
 
@@ -150,6 +150,7 @@
 		{
 		        $userAuth = $data['userAuth'];
 		        $username = $data['username'];
+		        $user_id = $data['id'];
 
 			//echo "The value of userAuth is: " . $userAuth . "\n";
 
@@ -162,6 +163,7 @@
 
 		        } else {
 		        	$_SESSION['username'] = $username;
+		        	$_SESSION['user_id'] = $user_id;
 				echo "\nSuccessfully Logged in!\n";
 
 				//TODO for Neil: Redirects Page

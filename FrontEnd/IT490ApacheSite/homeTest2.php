@@ -1,8 +1,10 @@
 <?php
 session_start(); // Start the session
-if (!isset($_SESSION["username"])) {
+if (!isset($_SESSION["username"]) && !isset($_SESSION["user_id"])) {
   die(header("Location: login5.php")); // Redirect to login page if user is not logged in
 }
+
+$_SESSION['choiceRec'] = '';
 ?>
 
 
@@ -41,7 +43,7 @@ if (!isset($_SESSION["username"])) {
   <div class="container shadow min-vh-100 py-2">
     <img src="All_Starter_Pokemon.png" alt="Starter Pokemon Image" class="mx-auto d-block imageFlipper" width="50%"/>
     <img src="PokeHub_FinalLogo2.png" alt="PokeHub Logo" width="17.5%" class="mx-auto d-block" />
-    <h1 class="text-center">Welcome back, <?php echo $_SESSION["username"]; ?>!</h1>
+    <h1 class="text-center">Welcome back, <?php echo $_SESSION["username"]; ?>! User ID: <?php echo $_SESSION["user_id"]; ?></h1>
     <!--<p class="text-center">Note for Neil: Last time logged in will go here. Debating between links to team building page and state page (pokedex basically). Also debating the virtual fight viewer thingy from proposal (Ellis and Max suggested just comparing team health because lets be honest, he's not gonna check that deep in the code). </p> -->
     <p class="text-center">You've succesfully logged in! More to come soon!</p>
     <br>
@@ -51,18 +53,9 @@ if (!isset($_SESSION["username"])) {
 				<h2>Stats Viewer</h2>
 				<p>View Pokémon and Pokémon Type stats</p>
 				<form method="POST">
-					<input type="radio" name="choice" value="input" onclick="showInput()"> Pokémon
+					<input type="radio" name="choice" value="dropdown" onclick="showDropdown()"> Pokémon
 					<input type="radio" name="choice" value="input2" onclick="showInput2()"> Pokémon Type
-					<input type="radio" name="choice" value="dropdown" onclick="showDropdown()"> Name Dropdown
 					<br>
-					<div id="input" style="display: none; margin-top: 2%;">
-						<input type="text" name="pokemon_name" placeholder="Ex: pikachu or starmie">
-						<input type="submit" name="submitPokemonName" class="mt-1 btn btn-primary" value="Submit" />
-					</div>
-					<div id="input2" style="display: none; margin-top: 2%;">
-						<input type="text" name="pokemon_type" placeholder="Ex: fire, fairy, or dark">
-						<input type="submit" name="submitPokemonType" class="btn btn-primary" value="Submit" />
-					</div>
 					<div id="dropdown" style="display: none; margin-top: 2%;">
 						<?php 
 						$file = fopen("pokemonNames.txt", "r");
@@ -79,39 +72,328 @@ if (!isset($_SESSION["username"])) {
 						}
 
 						fclose($file);
-					?>
-						<select>
-					<?php foreach ($names as $name): ?>
-						<option value="<?php echo $name; ?>"><?php echo $name; ?></option>
-					<?php endforeach; ?>
-					</select>
-					<input type="submit" name="submitPokemonType" class="mt-1 btn btn-primary" value="Submit" />
+						?>
+						<select name="selectedPokeName">
+						<?php foreach ($names as $name): ?>
+							<option value="<?php echo $name; ?>"><?php echo $name; ?></option>
+						<?php endforeach; ?>
+						</select>
+						<input type="submit" name="submitPokeName" class="btn btn-primary" value="Submit" />
+					</div>
+					<div id="input2" style="display: none; margin-top: 2%;">
+						<?php 
+						$file = fopen("pokemonTypes.txt", "r");
+						$types = array();
+
+						while(!feof($file)) {
+						$type = fgets($file);
+						$type = trim($type);
+						if ($type === 'fairy') {
+							array_push($types, $type);
+							break;
+						}
+						array_push($types, $type);
+						}
+
+						fclose($file);
+						?>
+						<select name="selectedPokeType">
+						<?php foreach ($types as $type): ?>
+							<option value="<?php echo $type; ?>"><?php echo $type; ?></option>
+						<?php endforeach; ?>
+						</select>
+						<input type="submit" name="submitPokeType" class="btn btn-primary" value="Submit" />
 					</div>
 				</form>
 			</div>
+			<?php
+				require_once '/home/neil/IT490/IT490/FrontEnd/vendor/autoload.php';
+				
+				use PhpAmqpLib\Connection\AMQPStreamConnection;
+				use PhpAmqpLib\Message\AMQPMessage;
+				
+				if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+					if(isset($_POST['submitPokeName'])) {
+						$choice = "pokemon type";
+						$name_input = $_POST['selectedPokeName'];
+						
+						// Create a connection to RabbitMQ
+						//$connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
+						$connection = null;
+						$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
+
+						foreach ($ips as $ip) {
+							try {
+							$connection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
+							//echo "Connected to RabbitMQ instance at $ip\n";
+							break;
+							} catch (Exception $e) {
+							continue;
+							}
+						}
+
+						if (!$connection) {
+							die("Could not connect to any RabbitMQ instance.");
+						}
+						
+						$channel = $connection->channel();
+						
+						// Declare a queue for sending messages
+						$channel->queue_declare('pokeFE2BE', false, true, false, false, ['x-ha-policy'=>'all']);
+						
+						// Publish the message to the queue
+						$messageBody = json_encode([
+						'choice' => $choice,
+						'user_input' => $name_input,
+						]);
+						
+						// Define the message to send
+						$message = new AMQPMessage($messageBody);
+
+						// Publish the message to the queue
+						$channel->basic_publish($message, '', 'pokeFE2BE');
+						
+						// Close the channel and the connection
+						$channel->close();
+						$connection->close();
+					}
+					if(isset($_POST['submitPokeType'])) {
+						$choice = "damage type";
+						$type_input = $_POST['selectedPokeType'];
+						
+						// Create a connection to RabbitMQ
+						//$connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
+						$connection = null;
+						$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
+
+						foreach ($ips as $ip) {
+							try {
+							$connection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
+							//echo "Connected to RabbitMQ instance at $ip\n";
+							break;
+							} catch (Exception $e) {
+							continue;
+							}
+						}
+
+						if (!$connection) {
+							die("Could not connect to any RabbitMQ instance.");
+						}
+						
+						$channel = $connection->channel();
+						
+						// Declare a queue for sending messages
+						$channel->queue_declare('pokeFE2BE', false, true, false, false, ['x-ha-policy'=>'all']);
+						
+						// Publish the message to the queue
+						$messageBody = json_encode([
+						'choice' => $choice,
+						'user_input' => $type_input,
+						]);
+						
+						// Define the message to send
+						$message = new AMQPMessage($messageBody);
+
+						// Publish the message to the queue
+						$channel->basic_publish($message, '', 'pokeFE2BE');
+						
+						// Close the channel and the connection
+						$channel->close();
+						$connection->close();
+					}
+					
+					//Outside of Website Post if(statement)//
+					// Create a connection to RabbitMQ
+					//$connectionReceive = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
+					$connectionReceive = null;
+					$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
+
+					foreach ($ips as $ip) {
+						try {
+						$connectionReceive = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
+						//echo "Connected to RabbitMQ instance at: $ip\n";
+						break;
+						} catch (Exception $e) {
+						continue;
+						}
+					}
+
+					if (!$connectionReceive) {
+						die("Could not connect to any RabbitMQ instance.");
+					}
+					
+					$channelReceive = $connectionReceive->channel();
+
+					// Declare the queue
+					$channelReceive->queue_declare('pokeBE2FE', false, true, false, false, ['x-ha-policy'=>'all']);
+					
+					// Define the callback function to process messages from the queue
+					$callbackReceive = function ($messageReceive) {
+						$data = json_decode($messageReceive->getBody(),true);
+						$_SESSION['choiceRec'] = $data['choice'];
+						//echo $_SESSION['choiceRec'];
+						//echo $data['damage_type'] . "NAME <br>";
+						//echo $data['double_from'] . "DF <br>";
+						//echo $data['double_to'] . "DT <br>";
+						//echo $data['half_from'] . "HF <br>";
+						//echo $data['half_to'] . "HT <br>";
+						//echo $data['no_from'] . "NF <br>";
+						//echo $data['no_to'] . "NT";
+						
+						if ($data['choice'] == 'pokemon type') {
+							$_SESSION['pokeName'] = $data['pokemon_name'];
+							$_SESSION['pokeType'] = $data['types'];
+						} else if ($data['choice'] == 'damage type') {
+							$_SESSION['typeName'] = $data['damage_type'];
+							$_SESSION['doubleDamFrom'] = $data['double_from'];
+							$_SESSION['doubleDamTo'] = $data['double_to'];
+							$_SESSION['halfDamFrom'] = $data['half_from'];
+							$_SESSION['halfDamTo'] = $data['half_to'];
+							$_SESSION['noDamFrom'] = $data['no_from'];
+							$_SESSION['noDamTo'] = $data['no_to'];
+						}
+						
+					};
+					
+					// Consume messages from the queue
+					$channelReceive->basic_consume('pokeBE2FE', '', false, true, false, false, $callbackReceive);
+
+					// Keep consuming messages until the channel is closed
+					while ($channelReceive->is_open()) {
+						$channelReceive->wait();
+						break;
+					}
+
+					// Close the connection
+					$channelReceive->close();
+					$connectionReceive->close();
+				}
+			?>
 			<div class="col">
-				<p>Test</p>
+				<!-- Pokemon Name Table -->
+				<?php
+				if ($_SESSION['choiceRec'] == "pokemon type") {
+				    ?>
+				    <table class="table table-striped">
+					<thead>
+					    <tr>
+						<th>RESULTS</th>
+					    </tr>
+					</thead>
+					<tbody>
+					    <?php
+					    // Define the variables
+					    $pokeName = $_SESSION['pokeName'];
+					    $pokeType = $_SESSION['pokeType'];
+					    ?>
+					    <tr>
+						<td style="text-transform: uppercase;"><?php echo $pokeName; ?></td>
+						<td><?php echo $pokeType; ?></td>
+					    </tr>
+					</tbody>
+				    </table>
+				    <?php
+				}
+				?>
+				<!-- Damage Type Table -->
+				<?php
+				if ($_SESSION['choiceRec'] == "damage type") {
+				    ?>
+				    <table class="table table-striped">
+					<thead>
+					    <tr>
+						<th>RESULTS</th>
+					    </tr>
+					</thead>
+					<tbody>
+					    <?php
+					    // Define the variables
+					    $typeName = $_SESSION['typeName'];
+					    $doubleDamFrom = $_SESSION['doubleDamFrom'];
+					    $doubleDamTo = $_SESSION['doubleDamTo'];
+					    $halfDamFrom = $_SESSION['halfDamFrom'];
+					    $halfDamTo = $_SESSION['halfDamTo'];
+					    $noDamFrom = $_SESSION['noDamFrom'];
+					    $noDamTo = $_SESSION['noDamTo'];
+					    
+					    // Check if any damage relations are returned before creating the table row
+					    if ($doubleDamFrom || $doubleDamTo || $halfDamFrom || $halfDamTo || $noDamFrom || $noDamTo) {
+						// Start the table row
+						echo "<tr>";
+
+						// Add the type name to the row
+						echo "<td style=\"text-transform: uppercase;\">$typeName</td>";
+
+						// Add the damage relations to the row
+						echo "<td>";
+						if ($doubleDamFrom) {
+						    echo "Double damage from: " . $doubleDamFrom . "<br>";
+						}
+						if ($doubleDamTo) {
+						    echo "Double damage to: " . $doubleDamTo . "<br>";
+						}
+						if ($halfDamFrom) {
+						    echo "Half damage from: " . $halfDamFrom . "<br>";
+						}
+						if ($halfDamTo) {
+						    echo "Half damage to: " . $halfDamTo . "<br>";
+						}
+						if ($noDamFrom) {
+						    echo "No damage from: " . $noDamFrom . "<br>";
+						}
+						if ($noDamTo) {
+						    echo "No damage to: " . $noDamTo . "<br>";
+						}
+						echo "</td>";
+
+						// End the table row
+						echo "</tr>";
+					    }
+					    ?>
+					</tbody>
+				    </table>
+				    <?php
+				}
+				?>
 			</div>
 		</div>
     </div>
+	<div class="container">
+		<h2>Team Builder</h2>
+		<p>Build your team of Pokémon</p>
+		<div class="row align-items-center text-center">
+			<form method="POST">
+				<div class="border border-black">
+					1
+				</div>
+				<div class="border border-black">
+					2
+				</div>
+				<div class="border border-black">
+					3
+				</div>
+				<div class="border border-black">
+					4
+				</div>
+				<div class="border border-black">
+					5
+				</div>
+				<div class="border border-black">
+					6
+				</div>
+				<input type="submit" name="submitPokeTeam" class="btn btn-primary" value="Submit" />
+			</form>
+		</div>
+	</div>
   </div>
   <script>
-  function showInput() {
-	document.getElementById("input").style.display = "block";
-	document.getElementById("input2").style.display = "none";
-	document.getElementById("dropdown").style.display = "none";
-	localStorage.setItem("choice", "input");
-  }
-
   function showInput2() {
-  	document.getElementById("input").style.display = "none";
 	document.getElementById("input2").style.display = "block";
 	document.getElementById("dropdown").style.display = "none";
 	localStorage.setItem("choice", "input2");
   }
   
   function showDropdown() {
-  	document.getElementById("input").style.display = "none";
 	document.getElementById("input2").style.display = "none";
 	document.getElementById("dropdown").style.display = "block";
 	localStorage.setItem("choice", "dropdown");
@@ -120,14 +402,11 @@ if (!isset($_SESSION["username"])) {
   // Retrieve the stored radio button value and set the initial state
   window.onload = function() {
 	var choice = localStorage.getItem("choice");
-	if (choice === "input") {
-		document.getElementsByName("choice")[0].checked = true;
-		showInput();
-	} else if (choice === "input2") {
+	if (choice === "input2") {
   		document.getElementsByName("choice")[1].checked = true;
   		showInput2();
 	} else if (choice === "dropdown") {
-		document.getElementsByName("choice")[2].checked = true;
+		document.getElementsByName("choice")[0].checked = true;
 		showDropdown();
 	}
   }
@@ -136,4 +415,3 @@ if (!isset($_SESSION["username"])) {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </body>
 </html>
-
