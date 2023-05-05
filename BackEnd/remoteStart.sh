@@ -47,6 +47,28 @@ else
 fi
 
 
+# =================CONDITIONAL API FILE================= #
+if pgrep -f "conditionalAPI.php" > /dev/null;
+then
+        echo "File [conditionalAPI.php] is running"
+else
+        echo "File [conditionalAPI.php] is not running, starting it now"
+        gnome-terminal -- php conditionalAPI.php
+        
+fi
+
+
+# =================UPDATE POKE API FILE================= #
+if pgrep -f "updatePokeAPI.php" > /dev/null;
+then
+        echo "File [updatePokeAPI.php] is running"
+else
+        echo "File [updatePokeAPI.php] is not running, starting it now"
+        gnome-terminal -- php updatePokeAPI.php
+
+fi
+
+
 
 # php /home/ellis/IT490/IT490/BackEnd/regStep2.php &
 # php /home/ellis/IT490/IT490/BackEnd/regStep4.php &

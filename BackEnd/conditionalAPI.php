@@ -13,7 +13,7 @@ $ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 foreach ($ips as $ip) {
     try {
         $connection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
-	echo "Connected to RabbitMQ instance at $ip\n";
+	echo "[conditionalAPI] Connected to RabbitMQ instance at $ip\n";
 	
         break;
     } catch (Exception $e) {
@@ -106,7 +106,7 @@ $callback = function ($message) use ($channel) {
 			foreach ($ips as $ip) {
 	    			try {
 					$pokemonTypesConnection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
-					echo "Connected to RabbitMQ instance at $ip\n";
+					echo "[conditionalAPI] Connected to RabbitMQ instance at $ip\n";
 			    		break;
 	    			} catch (Exception $e) {
 					continue;
@@ -143,7 +143,7 @@ while (true) {
         foreach ($ips as $ip) {
             try {
                 $connection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
-                echo "Connected to RabbitMQ instance at $ip\n";
+                echo "[conditionalAPI] Connected to RabbitMQ instance at $ip\n";
                 break;
             } catch (Exception $e) {
                 continue;
