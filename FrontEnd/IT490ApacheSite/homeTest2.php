@@ -3,8 +3,6 @@ session_start(); // Start the session
 if (!isset($_SESSION["username"]) && !isset($_SESSION["user_id"])) {
   die(header("Location: login5.php")); // Redirect to login page if user is not logged in
 }
-
-$_SESSION['choiceRec'] = '';
 ?>
 
 
@@ -358,58 +356,75 @@ $_SESSION['choiceRec'] = '';
 			</div>
 		</div>
     </div>
-	<div class="container">
-		<h2>Team Builder</h2>
-		<p>Build your team of Pokémon</p>
-		<div class="row align-items-center text-center">
-			<form method="POST">
-				<div class="border border-black">
-					1
-				</div>
-				<div class="border border-black">
-					2
-				</div>
-				<div class="border border-black">
-					3
-				</div>
-				<div class="border border-black">
-					4
-				</div>
-				<div class="border border-black">
-					5
-				</div>
-				<div class="border border-black">
-					6
-				</div>
-				<input type="submit" name="submitPokeTeam" class="btn btn-primary" value="Submit" />
-			</form>
-		</div>
+	<br>
+	
 	</div>
-  </div>
   <script>
-  function showInput2() {
-	document.getElementById("input2").style.display = "block";
-	document.getElementById("dropdown").style.display = "none";
-	localStorage.setItem("choice", "input2");
-  }
-  
-  function showDropdown() {
-	document.getElementById("input2").style.display = "none";
-	document.getElementById("dropdown").style.display = "block";
-	localStorage.setItem("choice", "dropdown");
-  }
-
-  // Retrieve the stored radio button value and set the initial state
-  window.onload = function() {
-	var choice = localStorage.getItem("choice");
-	if (choice === "input2") {
-  		document.getElementsByName("choice")[1].checked = true;
-  		showInput2();
-	} else if (choice === "dropdown") {
-		document.getElementsByName("choice")[0].checked = true;
-		showDropdown();
+	function showInput2() {
+		document.getElementById("input2").style.display = "block";
+		document.getElementById("dropdown").style.display = "none";
+		localStorage.setItem("choice", "input2");
 	}
-  }
+	
+	function showDropdown() {
+		document.getElementById("input2").style.display = "none";
+		document.getElementById("dropdown").style.display = "block";
+		localStorage.setItem("choice", "dropdown");
+	}
+
+	// Retrieve the stored radio button value and set the initial state
+	window.onload = function() {
+		var choice = localStorage.getItem("choice");
+		if (choice === "input2") {
+			document.getElementsByName("choice")[1].checked = true;
+			showInput2();
+		} else if (choice === "dropdown") {
+			document.getElementsByName("choice")[0].checked = true;
+			showDropdown();
+		}
+	}
+  </script>
+  <script>
+	function downloadFile() {
+	// Get the current date and time
+	var now = new Date();
+	var month = now.getMonth() + 1; // add 1 to get month starting from 1 instead of 0
+	var day = now.getDate();
+	var year = now.getFullYear();
+	var hour = now.getHours();
+	var minute = now.getMinutes();
+	var ampm = hour >= 12 ? 'pm' : 'am';
+
+	// Format the date and time string
+	var dateTime = month.toString().padStart(2, '0') + '-' + day.toString().padStart(2, '0') + '-' + year + '-' + hour.toString().padStart(2, '0') + '_' + minute.toString().padStart(2, '0') + ampm;
+
+	// JavaScript code to output and download the file
+	var userInfo = "<?php echo $_SESSION['username'];?>";
+	var teamMember1 = "<?php echo $_SESSION['teamMember1']; ?>";
+	var teamMember2 = "<?php echo $_SESSION['teamMember2']; ?>";
+	var teamMember3 = "<?php echo $_SESSION['teamMember3']; ?>";
+	var teamMember4 = "<?php echo $_SESSION['teamMember4']; ?>";
+	var teamMember5 = "<?php echo $_SESSION['teamMember5']; ?>";
+	var teamMember6 = "<?php echo $_SESSION['teamMember6']; ?>";
+	
+	var content = "Username: " + userInfo + " " + "\n" +
+					"Date & Time: " + dateTime + "\n" +
+					"Team Member 1: " + teamMember1 + "\n" +
+					"Team Member 2: " + teamMember2 + "\n" +
+					"Team Member 3: " + teamMember3 + "\n" +
+					"Team Member 4: " + teamMember4 + "\n" +
+					"Team Member 5: " + teamMember5 + "\n" +
+					"Team Member 6: " + teamMember6 + "\n";
+	
+	// Create a Blob object from the text content
+	var blob = new Blob([content], { type: 'text/plain' });
+	
+	// Create a link element to trigger the download
+	var link = document.createElement('a');
+	link.download = userInfo + "_PokemonTeam_" + dateTime + '.txt';
+	link.href = window.URL.createObjectURL(blob);
+	link.click();
+	}
   </script>
   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
