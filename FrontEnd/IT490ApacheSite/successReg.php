@@ -4,7 +4,7 @@
 	<title>PokéHub - Successful Login</title>
 	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="refresh" content="5;url=login5.php">
+	<meta http-equiv="refresh" content="5;url=login.php">
 	<script>
 		var timeLeft = 5;
 		function countdown() {
@@ -50,5 +50,6 @@
 	</center>
   </div>
 </body>
+<script src="script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </html>

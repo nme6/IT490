@@ -3,6 +3,8 @@ session_start(); // Start the session
 if (!isset($_SESSION["username"]) && !isset($_SESSION["user_id"])) {
   die(header("Location: login5.php")); // Redirect to login page if user is not logged in
 }
+
+$_SESSION['choiceRec'] = ' ';
 ?>
 
 
@@ -11,7 +13,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["user_id"])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PokéHub - Home</title>
+  <title>PokéHub - Stats Viewer</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
   <link href="style.css" rel="stylesheet" type="text/css" />
@@ -28,6 +30,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["user_id"])) {
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav ms-auto">
+		  <a class="nav-link" href="home.php">Team Builder/Viewer</a>
           <a class=nav-link>User: <?php echo $_SESSION["username"]; ?></a>
           <a class="nav-link" href="logout.php">Logout</a>
         </div>
@@ -41,9 +44,6 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["user_id"])) {
   <div class="container shadow min-vh-100 py-2">
     <img src="All_Starter_Pokemon.png" alt="Starter Pokemon Image" class="mx-auto d-block imageFlipper" width="50%"/>
     <img src="PokeHub_FinalLogo2.png" alt="PokeHub Logo" width="17.5%" class="mx-auto d-block" />
-    <h1 class="text-center">Welcome back, <?php echo $_SESSION["username"]; ?>! User ID: <?php echo $_SESSION["user_id"]; ?></h1>
-    <!--<p class="text-center">Note for Neil: Last time logged in will go here. Debating between links to team building page and state page (pokedex basically). Also debating the virtual fight viewer thingy from proposal (Ellis and Max suggested just comparing team health because lets be honest, he's not gonna check that deep in the code). </p> -->
-    <p class="text-center">You've succesfully logged in! More to come soon!</p>
     <br>
     <div class="container">
     	<div class="row align-items-center">
@@ -71,7 +71,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["user_id"])) {
 
 						fclose($file);
 						?>
-						<select name="selectedPokeName">
+						<select class="form-select" name="selectedPokeName">
 						<?php foreach ($names as $name): ?>
 							<option value="<?php echo $name; ?>"><?php echo $name; ?></option>
 						<?php endforeach; ?>
@@ -95,7 +95,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["user_id"])) {
 
 						fclose($file);
 						?>
-						<select name="selectedPokeType">
+						<select class="form-select" style="width: 20%;" name="selectedPokeType">
 						<?php foreach ($types as $type): ?>
 							<option value="<?php echo $type; ?>"><?php echo $type; ?></option>
 						<?php endforeach; ?>
