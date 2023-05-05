@@ -72,21 +72,20 @@ $callback = function ($message) use ($channel) {
 	   	
 	   	//Checks if the user is looking to build a team that will be saved in the Database for export later
 	   	if ($choice == 'team build') {
-	   		//take 8 parameters: User ID, Choice, Member1, Member2, Member3, Member4, Member5, Member6
-	   		//decode the variables sent from the form and then re-encode them to send 
-	   		/*
-	   		$user_id = $data['user_id'];
-	   		$member_1 = $data['member_1'];
-	   		$member_2 = $data['member_2'];
-	   		$member_3 = $data['member_3'];
-	   		$member_4 = $data['member_4'];
-	   		$member_5 = $data['member_5'];
-	   		$member_6 = $data['member_6'];
-	   		*/
+	   		//take 8 parameters: User ID, Choice, Member1, Member2, Member3, Member4, Member5, Member6	   		
+	   		//add json encoding info here for team builder
 	   		$pokemonTypeMessageBody = json_encode 
 	   		(
 	   			[
-	   				//add json encoding info here for team builder
+	   				'user_id'= $data['user_id'],
+	   				'choice' = $data['choice'],
+	   				'member_1' = $data['member_1'],
+	   				'member_2' = $data['member_2'],
+	   				'member_3' = $data['member_3'],
+	   				'member_4' = $data['member_4'],
+	   				'member_5' = $data['member_5'],
+	   				'member_6' = $data['member_6']
+
 	   				
 	   			]
 	   		);

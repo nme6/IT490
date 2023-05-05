@@ -75,7 +75,7 @@ $callback = function ($message) use ($channel) {
 				//Loop through each type result and append the output array that is later pushed to the Frontend/Database
 				foreach ($decoded_result['types'] as $type) {
 					//echo $type['type']['name'] . "\n";      //Output for testing purposes
-					$output .= $type['type']['name'] . " ";
+					$output .= $type['type']['name'] . "<br>";
 				}
 				
 				//Encode the appropriate information and prepare it for sending
@@ -239,7 +239,29 @@ $callback = function ($message) use ($channel) {
 								'no_to' => $data['no_to']
 							]
 						);
+						
+						
+					} elseif ($choice == 'team build') {
+						//THE DATABASE WILL CHECK THE TEAM NUMBER WHEN THEY GO TO SEARCH FOR ONE
+						//NEED TO IMPLEMENT A DATABASE SEARCH FEATURE FOR THE ASSOCIATED TEAM NUMBER
+						$pokemonTypeMessageBody = json_encode 
+	   					(
+	   						[
+	   						'user_id'= $data['user_id'],
+	   						'choice' = $data['choice'],
+	   						'member_1' = $data['member_1'],
+	   						'member_2' = $data['member_2'],
+	   						'member_3' = $data['member_3'],
+	   						'member_4' = $data['member_4'],
+	   						'member_5' = $data['member_5'],
+	   						'member_6' = $data['member_6']
+
+	   				
+	   						]
+	   					);
+											
 					}
+						
 					
 					
 				//Ensure that a rabbitmq connection is established
