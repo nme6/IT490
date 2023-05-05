@@ -41,3 +41,30 @@ else
     echo "#################################"
 fi
 
+# Check if Pokemon_Check is already running
+if pgrep -f "php pokemon_check.php" > /dev/null; then
+    echo "###############################"
+    echo "Pokemon_Check is already running"
+    echo "###############################"
+else
+    # Start Pokemon_Check in a new terminal window
+    echo "#################################"
+    echo "Starting Pokemon_Check"
+    echo "#################################"
+    gnome-terminal -- /bin/bash -c "php pokemon_check.php; exec bash"
+    echo "#################################"
+fi
+
+# Check if Pokemon_Insert is already running
+if pgrep -f "php pokemon_insert.php" > /dev/null; then
+    echo "###############################"
+    echo "Pokemon_Check is already running"
+    echo "###############################"
+else
+    # Start Pokemon_Insert in a new terminal window
+    echo "#################################"
+    echo "Starting Pokemon_Insert"
+    echo "#################################"
+    gnome-terminal -- /bin/bash -c "php pokemon_insert.php; exec bash"
+    echo "#################################"
+fi
