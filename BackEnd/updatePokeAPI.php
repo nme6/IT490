@@ -6,8 +6,9 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 // Create a connection to RabbitMQ
-//$connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
 
+//establish a connection with one of the nodes within the rabbitmq cluster
+//loop through the IPs until one is able to connect
 $connection = null;
 $ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 
@@ -29,42 +30,55 @@ if (!$connection) {
 }
 
 
+/*
+The main function of this file is to process the output given by the database when prompted to check if an entry already exists (locally cached). 
+If the information does not exist already, the API must be called and the results will be sent to the Database for storage and to the Frontend for immediate use for users. 
+If the information does already exist, then the API does not need to be called and the information is pulled and processed from the Database. After the data is packaged it is sent to the Frontend. 
+There are several tracking variables that travel through this file for ease of access in other files.
+*/
+
 $channel = $connection->channel();
 
 $channel->queue_declare('pokeAPIBE2DB', false, true, false, false, ['x-ha-policy'=>'all']);
 $channel->queue_declare('pokeDB2BE', false, true, false, false, ['x-ha-policy'=>'all']);
-//$choice = null;
+
 
 $callback = function ($message) use ($channel) {
 	$api = new PokeApi;
 	$data = json_decode($message->getBody(), true);
 	
+	//Establish variables used for conditional statements provided by both Database and Frontend
 	$choice = $data['choice'];
 	$exists = $data['exists'];
 	$user_input = $data['name'];
 	
-	//while ($choice != 'exit') {
+	
 		$output = "";
 		$output_array = [];
-
+		
+		//Condition checks if the API response information is not already stored in the Database. If it is confrimed to not appear in the Database then the API call is made. 
 		if ($exists != true) {
 
 			//Check for when user wants to check specific pokemon's typing
 			if ($choice == 'pokemon type') {
 				
-				//$user_input = readline('Enter a Pokemon name: ');
+				//Call the API to gain the specified information
 				$result = $api->pokemon($user_input);
 				$decoded_result = json_decode($result, true);
 					
-				//ouptut the pokemon's name 
+				//Output the name of the Pokemon for testing purposes
+				/*
 				echo "Pokemon name: " . $decoded_result['name'] . "\n";
 				echo "Types: \n";
-
+				*/
+				
+				//Loop through each type result and append the output array that is later pushed to the Frontend/Database
 				foreach ($decoded_result['types'] as $type) {
-					echo $type['type']['name'] . "\n";
+					//echo $type['type']['name'] . "\n";      //Output for testing purposes
 					$output .= $type['type']['name'] . " ";
 				}
 				
+				//Encode the appropriate information and prepare it for sending
 				$pokemonTypesMessageBody = json_encode 
 				(
 					[
@@ -80,17 +94,22 @@ $callback = function ($message) use ($channel) {
 				
 				$result = $api->pokemonType($user_input);
 				$decoded_result = json_decode($result, true);
-
+				
+				//Loop through the API response for each key and its associated value
 				foreach ($decoded_result['damage_relations'] as $key => $value) {
-
+						
+					//Append the output array with the current key
 					array_push($output_array, $key . ": ");
-				//go through each of the relational damages and echo the name of the types	
+					
+					//Append the output array with the current key's value
 			    		foreach ($value as $name) {
 
 						array_push($output_array, $name['name']);
 						
 			    		}	
 				}
+				
+				//Instantiate empty lists for the API responses to be placed in
 				$double_damage_from = [];
 				$double_damage_to = [];
 				$half_damage_from = [];
@@ -100,6 +119,7 @@ $callback = function ($message) use ($channel) {
 
 				$category = '';
 				
+				//Sort the long output based on spacing and trim wherever the delimiter is
 				foreach ($output_array as $item) {
 					if (strpos($item, ':') !== false) {
 						$category = trim(str_replace(':', '', $item));
@@ -107,6 +127,8 @@ $callback = function ($message) use ($channel) {
 						${$category}[] = trim($item);
 					}
 				}
+				
+				//Populate the instantiated lists with the sorted information
 				$double_damage_from_output = implode(', ', $double_damage_from) . "\n";
 				$double_damage_to_output = implode(', ', $double_damage_to) . "\n";
 				$half_damage_from_output = implode(', ', $half_damage_from) . "\n";
@@ -114,6 +136,7 @@ $callback = function ($message) use ($channel) {
 				$no_damage_from_output = implode(', ', $no_damage_from) . "\n";
 				$no_damage_to_output = implode(', ', $no_damage_to) . "\n";
 				
+				//Encode and prep the data to be sent to the Database/Frontend
 				$pokemonTypesMessageBody = json_encode
 				(
 					[
@@ -130,9 +153,8 @@ $callback = function ($message) use ($channel) {
 				);
 			}	
 			
-			
+				//Ensure that a rabbitmq connection is established
 				$pokemonTypesInsertConnection = null;
-				//$pokemonTypesFrontConnection = null;
 				$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 				foreach ($ips as $ip) {
 		    			try {
@@ -148,39 +170,44 @@ $callback = function ($message) use ($channel) {
 		   			die("could not connect to any RabbitMQ instance");
 		   		};
 				
+				//send the API call response to the Database for storage (only executes after confirming it does not already appear in the Database)
 				$typeInsertChannel = $pokemonTypesInsertConnection->channel();
 				$typeInsertChannel->queue_declare('pokeAPIBE2DB', false, true, false, false, ['x-ha-policy'=>'all']);
 		    		$pokemonTypesMessage = new AMQPMessage($pokemonTypesMessageBody);
 		    		$typeInsertChannel->basic_publish($pokemonTypesMessage, '', 'pokeAPIBE2DB');
 
 		    		
-		    		
+		    		//send the API call response to the Frontend for display and processing for the user
 		    		$typeInsertChannel->queue_declare('pokeBE2FE', false, true, false, false, ['x-ha-policy'=>'all']);
 		    		$pokemonTypesMessage = new AMQPMessage($pokemonTypesMessageBody);
 		    		$typeInsertChannel->basic_publish($pokemonTypesMessage, '', 'pokeBE2FE');
 		    		$typeInsertChannel->close();
 		    		$pokemonTypesInsertConnection->close();
 		    		
-		    		//send to frontend here as well
-				
-				
-
+		    		//Condition now checks if the API response was already stored in the Database	    				
 				} elseif ($exists) {
 			
 					if ($choice == 'pokemon type') {
-						$pokemon_types = $data['types'];
-						echo $pokemon_types;
+					
+						//Outputs for testing purposes in Backend
+						/*
+						echo $data['types'];
 						echo $exists;
+						*/
 						
+						//Encode and prep the information to be sent to the Frontend
 						$pokemonTypesMessageBody = json_encode
 						(
 							[
-								'choice' => $choice,
-								'pokemon_name' => $user_input,
-								'types' => $pokemon_types
+								'choice' => $data['choice'],
+								'pokemon_name' => $data['name'],
+								'types' => $data['types']
 							]
 						);
 					} elseif ($choice == 'damage type') {
+						
+						//used to display test results in backend terminal during testing Database calls
+						/*
 						$damage_type =$data['name'];
 						$double_damage_from = $data['double_from'];
 						$double_damage_to = $data['double_to'];
@@ -196,26 +223,27 @@ $callback = function ($message) use ($channel) {
 						echo "Half Damage To: " . $half_damage_to . "\n";
 						echo "No Damage From: " . $no_damage_from . "\n";
 						echo "No Damage To: " . $no_damage_to . "\n";
-												
+						*/
+						
+						//package up information to send to Frontend machine						
 						$pokemonTypesMessageBody = json_encode
 						(
 							[
-								'choice' => $choice,
-								'damage_type' => $user_input,
-								'double_from' => $double_damage_from,
-								'double_to' => $double_damage_to,
-								'half_from' => $half_damage_from,
-								'half_to' => $half_damage_to,
-								'no_from' => $no_damage_from,
-								'no_to' => $no_damage_to
+								'choice' => $data['choice'],
+								'damage_type' => $data['name'],
+								'double_from' => $data['double_from'],
+								'double_to' => $data['double_to'],
+								'half_from' => $data['half_from'],
+								'half_to' => $data['half_to'],
+								'no_from' => $data['no_from'],
+								'no_to' => $data['no_to']
 							]
 						);
 					}
 					
 					
-					
+				//Ensure that a rabbitmq connection is established
 				$pokemonTypesInsertConnection = null;
-				//$pokemonTypesFrontConnection = null;
 				$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 				foreach ($ips as $ip) {
 		    			try {
@@ -231,6 +259,7 @@ $callback = function ($message) use ($channel) {
 		   			die("could not connect to any RabbitMQ instance");
 		   		};
 		   		
+		   		//Establish the connection channel and send the encoded data to the Frontend
 		   		$typeInsertChannel = $pokemonTypesInsertConnection->channel();
 		   		$typeInsertChannel->queue_declare('pokeBE2FE', false, true, false, false, ['x-ha-policy'=>'all']);
 		    		$pokemonTypesMessage = new AMQPMessage($pokemonTypesMessageBody);
@@ -238,12 +267,12 @@ $callback = function ($message) use ($channel) {
 		    		$typeInsertChannel->close();
 		    		$pokemonTypesInsertConnection->close();
 				
-				//now send to the frontend
 				
 			}
 		
 	};	
-//};
+
+//Attempt to recconnect to rabbitmq nodes and re-establish queues if connection is lost
 while (true) {
     try {
         $channel->basic_consume('pokeDB2BE', '', false, true, false, false, $callback);

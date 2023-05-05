@@ -5,9 +5,7 @@ use PokePHP\PokeApi;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-// Create a connection to RabbitMQ
-//$connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
-
+//Ensure that a rabbitmq connection is established
 $connection = null;
 $ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 
@@ -29,50 +27,72 @@ if (!$connection) {
 }
 
 
-
+/*
+The main function of this file is to receive the requestt from the Frontend and prepare the variables to be processed in the Database. 
+Based on the request made (pokemon type, damage type, team build) the information will be packaged differently and sent to the Database for reference checks.
+*/
 
 
 $choice = null;
 $channel = $connection->channel();
 $channel->queue_declare('pokeFE2BE', false, true, false, false, ['x-ha-policy'=>'all']);
-//while ($choice != 'exit') {
+
 $callback = function ($message) use ($channel) {
-		//change this to a json decode receiving info from the frontend
-		//$choice = readline('Please enter what you are looking for: ');
+		
+		
 		$data = json_decode($message->getBody(), true);
 		$choice = $data['choice'];
-		$user_input = $data['user_input'];
-		if ($choice == 'pokemon type') {
-			
-			//change to a json decode for user input from the frontend
-			//$user_input = readline('Enter a Pokemon name: ');
-			
+		
+		//Each If statement checks for the different arguments made by the user
+		//Checks if the user is looking for Pokemon Type information
+		if ($choice == 'pokemon type') {		
 
-			
 			$pokemonTypesMessageBody = json_encode 
 			(
 				[
-					'choice' => $choice,
-					'pokemon_name' => $user_input
+					'choice' => $data['choice'],
+					'pokemon_name' => $data['user_input']
 				]
 			);
 			
 		}
-	   		
-	   	if ($choice == 'damage type') {
-	   		//$user_input = readline('Enter a damage type: ');
-	   		
+	   	
+	   	//Checks if the user is looking for the Type Damage information
+	   	if ($choice == 'damage type') {		
 	   		
 	   		$pokemonTypesMessageBody = json_encode
 	   		(
 	   			[
-	   				'choice' => $choice,
-	   				'damage_type' => $user_input
+	   				'choice' => $data['choice'],
+	   				'damage_type' => $data['user_input']
 	   			]
 	   		);
 	   		
 	   	}
 	   	
+	   	//Checks if the user is looking to build a team that will be saved in the Database for export later
+	   	if ($choice == 'team build') {
+	   		//take 8 parameters: User ID, Choice, Member1, Member2, Member3, Member4, Member5, Member6
+	   		//decode the variables sent from the form and then re-encode them to send 
+	   		/*
+	   		$user_id = $data['user_id'];
+	   		$member_1 = $data['member_1'];
+	   		$member_2 = $data['member_2'];
+	   		$member_3 = $data['member_3'];
+	   		$member_4 = $data['member_4'];
+	   		$member_5 = $data['member_5'];
+	   		$member_6 = $data['member_6'];
+	   		*/
+	   		$pokemonTypeMessageBody = json_encode 
+	   		(
+	   			[
+	   				//add json encoding info here for team builder
+	   				
+	   			]
+	   		);
+	   		}
+	   		
+	   		//Ensure that a rabbitmq connection is established
 			$pokemonTypesConnection = null;
 			$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 			foreach ($ips as $ip) {
@@ -88,20 +108,18 @@ $callback = function ($message) use ($channel) {
 	   		if (!$pokemonTypesConnection) {
 	   			die("could not connect to any RabbitMQ instance");
 	   		}
+	   		
+	   		//Establish the connection channel and send the encoded data to the Database
 			$typeChannel = $pokemonTypesConnection->channel();
 			$typeChannel->queue_declare('pokeBE2DB', false, true, false, false, ['x-ha-policy'=>'all']);
 	    		$pokemonTypesMessage = new AMQPMessage($pokemonTypesMessageBody);
 	    		$typeChannel->basic_publish($pokemonTypesMessage, '', 'pokeBE2DB');
 	    		$typeChannel->close();
 	    		$pokemonTypesConnection->close();
-			
-			
-			
-			
 
 		};
 		
-		
+//Attempt to recconnect to rabbitmq nodes and re-establish queues if connection is lost
 while (true) {
     try {
         $channel->basic_consume('pokeFE2BE', '', false, true, false, false, $callback);
