@@ -49,6 +49,7 @@ $callback = function ($message) use ($channel){
 	$password_db = "test";
 	$dbname = "test";
 
+
 	$conn = mysqli_connect($servername, $username_db, $password_db, $dbname);
 
 	// Check if the connection is successful

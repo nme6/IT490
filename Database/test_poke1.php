@@ -22,7 +22,7 @@ if (!$connection) {
     die("Could not connect to any RabbitMQ instance.");
 }
 $channel = $connection->channel();
-$channel->queue_declare('pokeBE2DB', false, true, false, false);
+$channel->queue_declare('pokeBE2DB', false, true, false, false, ['x-ha-policy'=>'all']);
 
 $callback = function ($message) use ($channel){
     // Assign $data from JSON   
@@ -33,6 +33,7 @@ $callback = function ($message) use ($channel){
 
     //$types =$data['types'];
     $choice = $data['choice'];
+    
 	if ($choice == 'pokemon type') {
 		$pokemon_name =$data['pokemon_name'];
 		// Connect to the database
@@ -67,6 +68,7 @@ $callback = function ($message) use ($channel){
 		//mysqli_query($conn, $sql_insert);
 	    
 	} elseif ($pokemon_exists) {
+	    
             $sql = "SELECT types FROM `pokemon types` WHERE `pokemon_name` = '$pokemon_name'";
 	    $result = mysqli_query($conn, $sql);
 	    $row = mysqli_fetch_assoc($result);
@@ -84,6 +86,14 @@ $callback = function ($message) use ($channel){
 	};
 	}
 	if ($choice == 'damage type') {
+		// Connect to the database
+		$servername = "localhost";
+		$username_db = "test";
+		$password_db = "test";
+		$dbname = "test";
+		
+	    $conn = mysqli_connect($servername, $username_db, $password_db, $dbname);
+	    
 		$damage_type = $data['damage_type'];
 		$sql = "SELECT * FROM `damage` WHERE `damage_type` = '$damage_type'";
 		$result = mysqli_query($conn, $sql);
@@ -96,11 +106,44 @@ $callback = function ($message) use ($channel){
 		    		[
 		    			'exists' => $damage_exists,
 		    			'choice' => $choice,
-		    			'damage_type' => $damage_type
+		    			'name' => $damage_type
 		    		]
 		    	);
 		
-}
+		} elseif ($damage_exists) {
+				// Connect to the database
+		$servername = "localhost";
+		$username_db = "test";
+		$password_db = "test";
+		$dbname = "test";
+		
+	    $conn = mysqli_connect($servername, $username_db, $password_db, $dbname);
+
+	    $sql = "SELECT * FROM `damage` WHERE `damage_type` = '$damage_type'";
+	    $result = mysqli_query($conn, $sql);
+	    $row = mysqli_fetch_assoc($result);
+	    $damage_type = $row['damage_type'];
+	    $double_from = $row['double_from'];
+	    $double_to = $row['double_to'];
+	    $half_from = $row['half_from'];
+	    $half_to = $row['half_to'];
+	    $no_to = $row['no_to'];
+	    $no_from = $row['no_from'];
+        	$pokemonMessage = json_encode(
+    		[
+    			'exists' => $damage_exists,
+    			'choice' => $choice,
+    			'name' => $damage_type,
+		    	'double_from' => $double_from,
+		    	'double_to' => $double_to,
+		    	'half_from' => $half_from,
+		    	'half_to' => $half_to,
+		    	'no_to' => $no_to,
+		    	'no_from' => $no_from
+    			
+    		]
+    		);
+		}
 }
     	$pokeconnection = null;
 	$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
@@ -120,7 +163,7 @@ $callback = function ($message) use ($channel){
 	}
 	
 	$pokechannel = $pokeconnection->channel();
-        $pokechannel->queue_declare('pokeDB2BE', false, false, false, false, ['x-ha-policy'=>'all']);
+        $pokechannel->queue_declare('pokeDB2BE', false, true, false, false, ['x-ha-policy'=>'all']);
         $dbPmessage = new AMQPMessage($pokemonMessage);
         $pokechannel->basic_publish($dbPmessage, '', 'pokeDB2BE');
         $pokechannel->close();
@@ -154,7 +197,7 @@ while (true) {
             die("Could not connect to any RabbitMQ instance.");
         }
         $channel = $connection->channel();
-        $channel->queue_declare('pokeBE2DB', false, false, false, false, ['x-ha-policy'=>'all']);
+        $channel->queue_declare('pokeBE2DB', false, true, false, false, ['x-ha-policy'=>'all']);
     }
 }
 // Close the connection
