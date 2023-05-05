@@ -144,7 +144,90 @@ $callback = function ($message) use ($channel){
     		]
     		);
 		}
-}
+		}
+
+		$choice = $data['choice'];
+		if ($choice == 'team build'){
+			//$exists = true;
+			$id= $data['id'];
+			$member1= $data['member_1'];
+	    		$member2= $data['member_2'];
+	    		$member3= $data['member_3'];
+	    		$member4= $data['member_4'];
+	    		$member5= $data['member_5'];
+			$member6= $data['member_6'];
+			// Connect to the database
+			$servername = "localhost";
+			$username_db = "test";
+			$password_db = "test";
+			$dbname = "test";
+			$pokemonMessage = json_encode(
+			[
+				'id' => $id,
+				'exists' => true,
+				'choice' => $choice,
+				'member_1' => $member1,
+				'member_2' => $member2,
+				'member_3' => $member3,
+				'member_4' => $member4,
+				'member_5' => $member5,
+				'member_6' => $member6					
+			]
+			);
+		    	$conn = mysqli_connect($servername, $username_db, $password_db, $dbname);
+			
+			$sql_select = "SELECT id FROM `team` WHERE `id` = '$id'";
+			$result = mysqli_query($conn, $sql_select);
+			$row = mysqli_fetch_assoc($result);
+
+			// check if a record with the specified id already exists in the database
+			if ($row) {
+			    // record exists, update the team
+			    $sql_update = "UPDATE team SET member1='$member1', member2='$member2', member3='$member3', member4='$member4', member5='$member5', member6='$member6' WHERE id='$id'";
+			    mysqli_query($conn, $sql_update);
+			} else {
+			    // record does not exist, insert a new team
+			    $sql_insert = "INSERT INTO team (id, member1, member2, member3, member4, member5, member6) VALUES ('$id','$member1', '$member2', '$member3', '$member4', '$member5', '$member6')";
+			    mysqli_query($conn, $sql_insert);
+			}
+		}elseif ($choice == 'team view'){
+		// Connect to the database
+			$servername = "localhost";
+			$username_db = "test";
+			$password_db = "test";
+			$dbname = "test";
+			
+			$conn = mysqli_connect($servername, $username_db, $password_db, $dbname);
+			$id= $data['id'];
+			$choice= $data['choice'];
+		        $sql = "SELECT * FROM `team` WHERE `id` = '$id'";
+		    $result = mysqli_query($conn, $sql);
+		    $row = mysqli_fetch_assoc($result);
+		    $member1 = $row['member1'];
+		    $member2 = $row['member2'];
+		    $member3 = $row['member3'];
+		    $member4 = $row['member4'];
+		    $member5 = $row['member5'];
+		    $member6 = $row['member6'];
+        	$pokemonMessage = json_encode(
+    		[
+    			'member_1' => $member1,
+    			'member_2' => $member2,
+    			'member_3' => $member3,
+    			'member_4' => $member4,
+    			'member_5' => $member5,
+    			'member_6' => $member6,
+    			'id' => $id,
+    			'choice' => $choice,
+    			'exists' => true
+    			
+    		]
+		);	
+		}
+
+
+
+	
     	$pokeconnection = null;
 	$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 	foreach ($ips as $ip) {
