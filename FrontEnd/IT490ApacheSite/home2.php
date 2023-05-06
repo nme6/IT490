@@ -1,7 +1,7 @@
 <?php
 session_start(); // Start the session
 if (!isset($_SESSION["username"]) && !isset($_SESSION["user_id"])) {
-  die(header("Location: login5.php")); // Redirect to login page if user is not logged in
+  die(header("Location: login.php")); // Redirect to login page if user is not logged in
 }
 
 $_SESSION['choiceRec'] = ' ';
