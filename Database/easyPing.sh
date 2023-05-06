@@ -13,3 +13,4 @@ for ip in "${!servers[@]}"; do
   else
           echo -e "\e[1;34m${servers[$ip]}:\t\e[0m\e[1;33m(${ip})\t\e[0m is \e[1;31mOFFLINE(✘)\e[0m"
   fi
+done
