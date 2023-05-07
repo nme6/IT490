@@ -22,19 +22,22 @@ if (!$connection) {
 
 $channel = $connection->channel();
 
-$channel->queue_declare('docuExample', false, false, false, false, ['x-ha-policy'=>'all']);
+$channel->queue_declare('pokeBE2FE', false, true, false, false, ['x-ha-policy'=>'all']);
 
 echo " [*] Waiting for messages. To exit press CTRL+C\n";
 
 
 $callback = function ($msg) {
-    echo ' [x] Received ', $msg->body, "\n";
+    $data = json_decode($msg->getBody(), true);
+    echo ' [x] Received ', print_r($data), "\n";
+    $choiceNew = $data['choice'];
+    echo $choiceNew;
     //echo "Connected to RabbitMQ instance at: $ip\n\n";
 };
 
 while (true) {
     try {
-        $channel->basic_consume('docuExample', '', false, true, false, false, $callback);
+        $channel->basic_consume('pokeBE2FE', '', false, true, false, false, $callback);
         while (count($channel->callbacks)) {
             $channel->wait();
         }
@@ -57,7 +60,7 @@ while (true) {
             die("Could not connect to any RabbitMQ instance.");
         }
         $channel = $connection->channel();
-        $channel->queue_declare('docuExamples', false, false, false, false, ['x-ha-policy'=>'all']);
+        $channel->queue_declare('pokeBE2FE', false, true, false, false, ['x-ha-policy'=>'all']);
     }
 }
 

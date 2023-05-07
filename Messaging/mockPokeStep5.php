@@ -22,7 +22,7 @@ if (!$connection) {
 
 $channel = $connection->channel();
 
-$channel->queue_declare('docuExample', false, false, false, false, ['x-ha-policy'=>'all']);
+$channel->queue_declare('pokeBE2FE', false, true, false, false, ['x-ha-policy'=>'all']);
 
 echo " [*] Waiting for messages. To exit press CTRL+C\n";
 
@@ -34,7 +34,7 @@ $callback = function ($msg) {
 
 while (true) {
     try {
-        $channel->basic_consume('docuExample', '', false, true, false, false, $callback);
+        $channel->basic_consume('pokeBE2FE', '', false, true, false, false, $callback);
         while (count($channel->callbacks)) {
             $channel->wait();
         }
@@ -57,7 +57,7 @@ while (true) {
             die("Could not connect to any RabbitMQ instance.");
         }
         $channel = $connection->channel();
-        $channel->queue_declare('docuExamples', false, false, false, false, ['x-ha-policy'=>'all']);
+        $channel->queue_declare('pokeBE2FE', false, true, false, false, ['x-ha-policy'=>'all']);
     }
 }
 
