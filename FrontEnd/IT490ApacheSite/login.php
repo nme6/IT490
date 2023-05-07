@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Write me code that checks if the user is logged in. If they are, redirect them to the home page as login.php should not be accessable to logged in users..
+if (isset($_SESSION['username']) && isset($_SESSION["user_id"])) {
+  header("Location: home.php");
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,6 +55,8 @@
 </div>
 
 <?php
+      session_start(); // Start the session
+
       require_once '/home/neil/IT490/IT490/FrontEnd/vendor/autoload.php';
 
       use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -55,11 +67,29 @@
         $password = $_POST['password'];
 
         // Create a connection to RabbitMQ
-        $connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
+        //$connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
+        $connection = null;
+	$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
+
+	foreach ($ips as $ip) {
+	    try {
+		$connection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
+		//echo "Connected to RabbitMQ instance at $ip\n";
+		break;
+	    } catch (Exception $e) {
+		continue;
+	    }
+	}
+
+	if (!$connection) {
+	    die("Could not connect to any RabbitMQ instance.");
+	}
+        
         $channel = $connection->channel();
 
         // Declare a queue for sending messages
-        $channel->queue_declare('logFE2BE', false, false, false, false);
+        //$channel->queue_declare('logFE2BE', false, false, false, false);
+        $channel->queue_declare('logFE2BE', false, false, false, false, ['x-ha-policy'=>'all']);
 
         // Publish the message to the queue
         $messageBody = json_encode([
@@ -79,6 +109,93 @@
         // Close the channel and the connection
         $channel->close();
         $connection->close();
+        
+        
+      			//Outside of Website Post if(statement)//
+      	// Create a connection to RabbitMQ
+	//$connectionReceive = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
+	$connectionReceive = null;
+	$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
+
+	foreach ($ips as $ip) {
+	    try {
+		$connectionReceive = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
+		//echo "Connected to RabbitMQ instance at: $ip\n";
+		break;
+	    } catch (Exception $e) {
+		continue;
+	    }
+	}
+
+	if (!$connectionReceive) {
+	    die("Could not connect to any RabbitMQ instance.");
+	}
+	
+	$channelReceive = $connectionReceive->channel();
+
+	// Declare the queue
+	//$channelReceive->queue_declare('logBE2FE', false, false, false, false);
+	$channelReceive->queue_declare('logBE2FE', false, false, false, false, ['x-ha-policy'=>'all']);
+
+	//echo "-={[FrontEnd Log5] Waiting for Back-end messages. To exit press CTRL+C}=-\n";
+
+	// Define the callback function to process messages from the queue
+	$callbackReceive = function ($messageReceive) {
+
+		$data = json_decode($messageReceive->getBody(),true);
+		$isValid = $data['isValid'];
+
+
+		if ($isValid == false)
+		{
+			//echo "\n[Incorrect format for Username/Password ]\n";
+
+			//TODO for Neil: Redirects Page
+			echo "<script>alert('Oopsie, you made a FORMAT mistake!');</script>";
+			echo "<script>location.href='login.php';</script>";
+		}
+
+
+		if ($isValid == true)
+		{
+		        $userAuth = $data['userAuth'];
+		        $username = $data['username'];
+		        $user_id = $data['id'];
+
+			//echo "The value of userAuth is: " . $userAuth . "\n";
+
+		        if ($userAuth == false){
+				//echo "\nInvalid Username or Password.\n";
+
+				//TODO for Neil: Redirects Page
+				echo "<script>alert('Oopsie, you made a INVALID mistake!');</script>";
+				echo "<script>location.href='login.php';</script>";
+
+		        } else {
+		        	$_SESSION['username'] = $username;
+		        	$_SESSION['user_id'] = $user_id;
+				echo "\nSuccessfully Logged in!\n";
+
+				//TODO for Neil: Redirects Page
+				die(header("Location:homeTest.php"));
+			
+		        }
+		}
+
+	};
+
+	// Consume messages from the queue
+	$channelReceive->basic_consume('logBE2FE', '', false, true, false, false, $callbackReceive);
+
+	// Keep consuming messages until the channel is closed
+	while ($channelReceive->is_open()) {
+	    $channelReceive->wait();
+	    break;
+	}
+
+	// Close the connection
+	$channelReceive->close();
+	$connectionReceive->close();
       }
 ?>
 

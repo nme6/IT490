@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PokéHub</title>
+  <title>PokéHub - Login</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
   <link href="style.css" rel="stylesheet" type="text/css" />
@@ -55,11 +55,28 @@
         $password = $_POST['password'];
 
         // Create a connection to RabbitMQ
-        $connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
-        $channel = $connection->channel();
+        //$connection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
+	$connection = null;
+	$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
+
+	foreach ($ips as $ip) {
+    		try {
+        		$connection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
+        		echo "Connected to RabbitMQ instance at: $ip\n";
+        		break;
+    		} catch (Exception $e) {
+        		continue;
+    		}
+	}
+
+	if (!$connection) {
+    		die("Could not connect to any RabbitMQ instance.");
+	}
+	$channel = $connection->channel();
 
         // Declare a queue for sending messages
-        $channel->queue_declare('logFE2BE', false, false, false, false);
+        //$channel->queue_declare('logFE2BE', false, false, false, false);
+	$channel->queue_declare('logFE2BE', false, false, false, false, ['x-ha-policy' => 'all']);
 
         // Publish the message to the queue
         $messageBody = json_encode([
@@ -74,7 +91,7 @@
         $channel->basic_publish($message, '', 'logFE2BE');
 
         //Echo Msg to console
-        echo "-={[Front-end] Sent message to the Back-end!}=-\n$messageBody\n";
+        //echo "-={[Front-end] Sent message to the Back-end!}=-\n$messageBody\n";
 
         // Close the channel and the connection
         $channel->close();
