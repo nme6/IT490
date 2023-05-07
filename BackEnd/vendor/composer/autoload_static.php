@@ -17,6 +17,7 @@ class ComposerStaticInit99a93c29966522bcfe12d06391d7865f
         ),
         'P' => 
         array (
+            'PokePHP\\' => 8,
             'PhpAmqpLib\\' => 11,
             'ParagonIE\\ConstantTime\\' => 23,
         ),
@@ -26,6 +27,10 @@ class ComposerStaticInit99a93c29966522bcfe12d06391d7865f
         'phpseclib3\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
+        ),
+        'PokePHP\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/danrovito/pokephp/src',
         ),
         'PhpAmqpLib\\' => 
         array (

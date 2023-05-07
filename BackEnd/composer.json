@@ -1,4 +1,5 @@
 {
+		
 	"scripts": {
 		"test": "php --version",
 		
@@ -43,6 +44,8 @@
 
 	},
 	"require": {
-		"php-amqplib/php-amqplib": "^3.5"
+		"php-amqplib/php-amqplib": "^3.5",
+		"danrovito/pokephp": "^1.3"
+		
 	}
 }

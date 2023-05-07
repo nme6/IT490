@@ -52,7 +52,7 @@ $callback = function ($message) use ($channel) {
 
     echo "Received user status: " . $message->body . "\n";
         $userStatusConnection = null;
-        $ips = array('192.168.191.111', '192.168.191.67');
+        $ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
         //global $actual_ip;
         //$actual_ip = null;
     	foreach ($ips as $ip) {
@@ -109,4 +109,6 @@ while (true) {
         $channel->queue_declare('regDB2BE', false, false, false, false, ['x-ha-policy'=>'all']);
     }
 }
-
+$channel->close();
+$connection->close();
+?>

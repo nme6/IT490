@@ -42,6 +42,7 @@ $callback = function ($message) use ($channel) {
 
     $password = $data['password'];
     $username = $data['username'];
+    $id = $data['id'];
     $hash = $data['hash'];
     $userFound = $data['userFound'];
 
@@ -61,6 +62,7 @@ $callback = function ($message) use ($channel) {
 		    'userAuth' => $userAuth,
 		    'username' => $username,
 		    'isValid' => $isValid,
+		    'id' => $id
 	    ]
     );
 
@@ -73,7 +75,7 @@ $callback = function ($message) use ($channel) {
 
     //$userStatusConnection = new AMQPStreamConnection('192.168.191.111', 5672, 'admin', 'admin');
     $userStatusConnection = null;
-    $ips = array('192.168.191.111', '192.168.191.67');
+    $ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 
     foreach ($ips as $ip) {
         try {
@@ -91,7 +93,7 @@ $callback = function ($message) use ($channel) {
 
     $userStatusChannel = $userStatusConnection->channel();
     //$userStatusChannel->queue_declare('logBE2FE', false, false, false, false);
-    $channel->queue_declare('logBE2FE', false, false, false, false, ['x-ha-policy'=>'all']);
+    $userStatusChannel->queue_declare('logBE2FE', false, false, false, false, ['x-ha-policy'=>'all']);
     $userStatusMessage = new AMQPMessage($authBody);
     $userStatusChannel->basic_publish($userStatusMessage, '', 'logBE2FE');
     $userStatusChannel->close();

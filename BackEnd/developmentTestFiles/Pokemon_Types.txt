@@ -1,0 +1,59 @@
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+Pokemon name: charizard
+Types: 
+fire
+flying
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+Pokemon name: squirtle
+Types: 
+water
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+Pokemon name: mudkip
+Types: 
+water
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+Pokemon name: darkrai
+Types: 
+dark
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+Pokemon name: charmeleon
+Types: 
+fire
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+Pokemon name: staraptor
+Types: 
+normal
+flying
+Pokemon name: charizard
+Types: 
+fire
+flying
+Pokemon name: squirtle
+Types: 
+water
+Pokemon name: staraptor
+Types: 
+normal
+flying
+Pokemon name: charizard
+Types: 
+fire
+flying
+Pokemon name: squirtle
+Types: 
+water
+Pokemon name: charizard
+Types: 
+fire
+flying
+Pokemon name: squirtle
+Types: 
+water
+Pokemon name: charizard
+Types: 
+fire
+flying
+Pokemon name: squirtle
+Types: 
+water
+fireflyingfireflyingfireflyingfireflyingfire flying fire flying fire flying 
