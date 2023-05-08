@@ -151,7 +151,7 @@ if (isset($_SESSION['username']) && isset($_SESSION["user_id"])) {
 			//echo "\n[Incorrect format for Username/Password ]\n";
 
 			//TODO for Neil: Redirects Page
-			echo "<script>alert('Oopsie, you made a FORMAT mistake!');</script>";
+			echo "<script>alert('Incorrect format for Username/Password');</script>";
 			echo "<script>location.href='login.php';</script>";
 		}
 
@@ -168,13 +168,13 @@ if (isset($_SESSION['username']) && isset($_SESSION["user_id"])) {
 				//echo "\nInvalid Username or Password.\n";
 
 				//TODO for Neil: Redirects Page
-				echo "<script>alert('Oopsie, you made a INVALID mistake!');</script>";
+				echo "<script>alert('Invalid username or password');</script>";
 				echo "<script>location.href='login.php';</script>";
 
 		        } else {
 		        	$_SESSION['username'] = $username;
 		        	$_SESSION['user_id'] = $user_id;
-				echo "\nSuccessfully Logged in!\n";
+				//echo "\nSuccessfully Logged in!\n";
 
 				//TODO for Neil: Redirects Page
 				die(header("Location:home.php"));
