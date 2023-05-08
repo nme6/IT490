@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Write me code that checks if the user is logged in. If they are, redirect them to the home page as login.php should not be accessable to logged in users..
+// Checks if the user is logged in. If they are, redirect them to the home page as login.php should not be accessable to logged in users.
 if (isset($_SESSION['username']) && isset($_SESSION["user_id"])) {
   header("Location: home.php");
   exit();
@@ -177,7 +177,7 @@ if (isset($_SESSION['username']) && isset($_SESSION["user_id"])) {
 				echo "\nSuccessfully Logged in!\n";
 
 				//TODO for Neil: Redirects Page
-				die(header("Location:homeTest.php"));
+				die(header("Location:home.php"));
 			
 		        }
 		}
