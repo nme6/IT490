@@ -168,11 +168,11 @@ if (isset($_SESSION['username']) && isset($_SESSION["user_id"])) {
 
 	if ($isValid == false)
         {
-		echo "\n[Incorrect format for Registration Info]\n";
+          //echo "\n[Incorrect format for Registration Info]\n";
 
-		//TODO for Neil: Redirects Page
-		echo "<script>alert('Oopsie, you made a INFO mistake!');</script>";
-                echo "<script>location.href='register3.php';</script>";
+          //TODO for Neil: Redirects Page
+		            echo "<script>alert('Incorrect format for Registration info!');</script>";
+                echo "<script>location.href='register.php';</script>";
 
         }
 
@@ -184,7 +184,7 @@ if (isset($_SESSION['username']) && isset($_SESSION["user_id"])) {
                 //echo "The value of userAuth is: " . $userExists . "\n";
 
                 if ($userExists == false){
-			echo "\nSuccessfully Registered!\n";
+			//echo "\nSuccessfully Registered!\n";
 			
 			//TODO for Neil: Redirects Page
 			die(header("Location:successReg.php"));
@@ -198,8 +198,8 @@ if (isset($_SESSION['username']) && isset($_SESSION["user_id"])) {
 
 			//TODO for Neil: Redirects Page
 			//REDIRECTS TECHNICALLY WORK!!!!
-			echo "<script>alert('Oopsie, you made a mistake!');</script>";
-			echo "<script>location.href='register3.php';</script>";
+			echo "<script>alert('Username/Email is already taken!');</script>";
+			echo "<script>location.href='register.php';</script>";
                 }
         }
 
