@@ -91,7 +91,7 @@ $callback = function ($message) use ($channel) {
 			}
 			
 			if ($choice == 'damage type') {
-				$user_input = ['name'];
+				$user_input = $data['name'];
 				$result = $api->pokemonType($user_input);
 				$decoded_result = json_decode($result, true);
 				
@@ -185,6 +185,8 @@ $callback = function ($message) use ($channel) {
 		    		$pokemonTypesInsertConnection->close();
 		    		
 		    		
+		    		
+		    		
 		    		//Condition now checks if the API response was already stored in the Database	    				
 				} elseif ($exists) {
 			
@@ -275,6 +277,7 @@ $callback = function ($message) use ($channel) {
 			   					'member_6' => $data['member_6']
 			   				]
 			   			);
+			   			/*
 			   			$pokemonTypesInsertConnection = null;
 						$ips = array('192.168.191.111', '192.168.191.67', '192.168.191.215');
 						foreach ($ips as $ip) {
@@ -298,7 +301,7 @@ $callback = function ($message) use ($channel) {
 				    		$typeInsertChannel->basic_publish($pokemonTypesMessage, '', 'pokeBE2FE');
 				    		$typeInsertChannel->close();
 				    		$pokemonTypesInsertConnection->close();
-				    		
+				    		*/
 		   			} 
 
 						
@@ -310,7 +313,7 @@ $callback = function ($message) use ($channel) {
 				foreach ($ips as $ip) {
 		    			try {
 						$pokemonTypesInsertConnection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
-						echo "[conditionalAPI] Connected to RabbitMQ instance at $ip\n";
+						echo "[updatePokeAPI] Connected to RabbitMQ instance at $ip\n";
 				    		break;
 		    			} catch (Exception $e) {
 						continue;
