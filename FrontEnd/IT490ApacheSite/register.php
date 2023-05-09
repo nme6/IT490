@@ -91,7 +91,7 @@ if (isset($_SESSION['username']) && isset($_SESSION["user_id"])) {
 	foreach ($ips as $ip) {
 		try {
 			$connection = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
-			echo "Connected to RabbitMQ instance at: $ip\n";
+			//echo "Connected to RabbitMQ instance at: $ip\n";
 			break;
 		} catch (Exception $e) {
 			continue;
@@ -141,7 +141,7 @@ if (isset($_SESSION['username']) && isset($_SESSION["user_id"])) {
 	foreach ($ips as $ip) {
 	    try {
 		$connectionReceive = new AMQPStreamConnection($ip, 5672, 'admin', 'admin');
-		echo "Connected to RabbitMQ instance at: $ip\n";
+		//echo "Connected to RabbitMQ instance at: $ip\n";
 		break;
 	    } catch (Exception $e) {
 		continue;
